@@ -8,3 +8,7 @@
 /tmp/
 
 /.claude/
+
+# A conditional Gemfile (tooling gated on Ruby version) has no single
+# lockfile valid across the 2.4-4.0 matrix; resolve per-Ruby instead.
+Gemfile.lock

@@ -1,9 +1,9 @@
-name: Ruby
+name: CI
 
 on:
   push:
     branches:
-      - master
+      - main
 
   pull_request:
 
@@ -11,13 +11,26 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  test:
     name: Ruby ${{ matrix.ruby }}
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        ruby:
-          - '4.0.5'
+        # The full support range: 2.4 is the floor (the okf floor), newest is the
+        # current stable. Rubies that predate ubuntu-latest's toolchain run on
+        # the older image ruby/setup-ruby still builds them for.
+        include:
+          - { ruby: "2.4", os: ubuntu-22.04 }
+          - { ruby: "2.5", os: ubuntu-22.04 }
+          - { ruby: "2.6", os: ubuntu-22.04 }
+          - { ruby: "2.7", os: ubuntu-latest }
+          - { ruby: "3.0", os: ubuntu-latest }
+          - { ruby: "3.1", os: ubuntu-latest }
+          - { ruby: "3.2", os: ubuntu-latest }
+          - { ruby: "3.3", os: ubuntu-latest }
+          - { ruby: "3.4", os: ubuntu-latest }
+          - { ruby: "4.0", os: ubuntu-latest }
 
     steps:
       - uses: actions/checkout@v6
