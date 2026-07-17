@@ -24,7 +24,8 @@ Levenshtein) → [BM25+ score](/architecture/bm25-scoring.md) every posting →
 combine terms with `OR` / `AND` / `AND_NOT` → stable sort by descending score.
 Queries can also be combination *trees*, recursed the same way. Cost scales with
 the number of *matching* documents, not the corpus size — the reason the engine
-stays fast as the corpus grows.
+stays fast as the corpus grows, and why it
+[outruns a linear scan by ~50×](/benchmarks/okf-vs-minisearch.md) in practice.
 
 # The dirt model: why discard is lazy
 

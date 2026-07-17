@@ -28,7 +28,16 @@ This is also why [fidelity with the JS library](/decisions/bit-for-bit-fidelity.
 matters strategically: an index can be built in Ruby and searched in the browser,
 covering a client-side search story with the same zero-dependency backend.
 
+# Evidence
+
+The [okf-vs-minisearch benchmark](/benchmarks/okf-vs-minisearch.md) measures this
+directly: against okf's *current* search — a linear substring scan with no index —
+minisearch sustains **~44–56× the query throughput** over the real `@okf` bundle,
+at the cost of a one-time index build that a few dozen queries repay. That is the
+"move the ceiling up" claim, in numbers.
+
 # Citations
 
 [1] Project goal (2026-07-17): "speed up the okf gem base capabilities … postpone as much as I can the user require sqlite+FTS5 (will be nice) and provide the best all-in-one in the base gem solution."
 [2] `README.md` — "Good for the 'just add search' case."
+[3] [okf-vs-minisearch](/benchmarks/okf-vs-minisearch.md) — the benchmark-ips comparison and its full results.

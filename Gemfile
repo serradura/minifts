@@ -15,4 +15,9 @@ gem "minitest", ">= 5.15", "< 6"
 if RUBY_VERSION >= "2.7"
   gem "irb"
   gem "rubocop", "~> 1.21"
+
+  # benchmarks/ only (never run in CI). benchmarks/okf_vs_minisearch.rb also needs
+  # the okf gem, which is intentionally not a dependency here — run that one with
+  # plain `ruby -Ilib`, not `bundle exec`, so the installed okf resolves.
+  gem "benchmark-ips", "~> 2.0"
 end

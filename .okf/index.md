@@ -16,5 +16,6 @@ Ruby 2.4 floor.
 
 * [Decisions](decisions/) - The strategic and design choices, with their tradeoffs: the Ruby 2.4 floor, bit-for-bit JavaScript fidelity, and why Minisearch exists at all.
 * [Architecture](architecture/) - How the engine decomposes at runtime: the search engine, the radix-tree index, and the BM25+ scoring model.
+* [Benchmarks](benchmarks/) - Measured evidence: the benchmark-ips comparison against okf's current linear-scan search.
 * [Porting](porting/) - The JavaScript→Ruby fidelity craft: the catalogue of language-semantics gotchas and the differential oracle that guards against them.
 * [Toolchain](toolchain/) - How the build, test, and CI setup runs green on every Ruby from 2.4 up.

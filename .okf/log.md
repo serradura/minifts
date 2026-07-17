@@ -6,3 +6,5 @@
   * Architecture — [search-engine](/architecture/search-engine.md), [radix-tree-index](/architecture/radix-tree-index.md), [bm25-scoring](/architecture/bm25-scoring.md).
   * Porting — [js-fidelity-gotchas](/porting/js-fidelity-gotchas.md), [differential-oracle](/porting/differential-oracle.md).
   * Toolchain — [ruby-floor-ci](/toolchain/ruby-floor-ci.md).
+* **Update**: Recorded benchmark evidence for the okf role — `benchmarks/okf_vs_minisearch.rb` measures ~44–56× minisearch query throughput over okf's linear-scan search on the real `@okf` bundle — in [minisearch-role-in-okf](/decisions/minisearch-role-in-okf.md).
+* **Update**: Promoted that evidence to a first-class concept — [okf-vs-minisearch](/benchmarks/okf-vs-minisearch.md) in a new `benchmarks/` area (the full method, results, and tradeoff) — and pointed the [okf-role decision](/decisions/minisearch-role-in-okf.md) and the [search engine](/architecture/search-engine.md) at it.
