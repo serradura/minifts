@@ -1,0 +1,73 @@
+{
+ "tf": [
+  {
+   "id": 4,
+   "score": 1.9476891595835022
+  },
+  {
+   "id": 1,
+   "score": 1.2775735643943542
+  }
+ ],
+ "discard_lifecycle": {
+  "tc0": 14,
+  "dirtCount": 1,
+  "dirtFactor": 0.16666666666666666,
+  "documentCount": 4,
+  "termCountAfterDiscard": 14,
+  "has3": false,
+  "searchAfterDiscard": [
+   5,
+   1,
+   2
+  ],
+  "termCountAfterSearch": 14,
+  "termCountAfterVacuum": 13,
+  "dirtCountAfterVacuum": 0
+ },
+ "discard_all": {
+  "dirtCount": 2,
+  "documentCount": 3,
+  "search": [
+   5,
+   3
+  ]
+ },
+ "remove_all": {
+  "documentCount": 0,
+  "termCount": 0,
+  "search": []
+ },
+ "remove_readd": {
+  "afterRemove": {
+   "documentCount": 4,
+   "search": [
+    5
+   ]
+  },
+  "afterReadd": [
+   {
+    "id": 1,
+    "score": 3.336225691153481
+   },
+   {
+    "id": 5,
+    "score": 1.3132031060308498
+   }
+  ]
+ },
+ "serialized_dirty": {
+  "dirtCount": 1,
+  "documentCount": 4
+ },
+ "loaded_after_discard": [
+  3,
+  1
+ ],
+ "auto_vacuum": {
+  "dirtCount": 5,
+  "documentCount": 35,
+  "isVacuuming": true,
+  "tcBefore": 68
+ }
+}

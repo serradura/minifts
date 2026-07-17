@@ -1,0 +1,2000 @@
+{
+  "docs": [
+    {
+      "id": 1,
+      "title": "Moby Dick",
+      "text": "Call me Ishmael. Some years ago never mind how long precisely",
+      "category": "fiction"
+    },
+    {
+      "id": 2,
+      "title": "Zen and the Art of Motorcycle Maintenance",
+      "text": "I can see by my watch without taking my hand from the left grip",
+      "category": "fiction"
+    },
+    {
+      "id": 3,
+      "title": "Neuromancer",
+      "text": "The sky above the port was the color of television tuned to a dead channel",
+      "category": "fiction"
+    },
+    {
+      "id": 4,
+      "title": "Zen and the Art of Archery",
+      "text": "At first sight it must seem highly unreasonable to speak of archery",
+      "category": "non-fiction"
+    },
+    {
+      "id": 5,
+      "title": "Pride and Prejudice",
+      "text": "It is a truth universally acknowledged that a single man in possession",
+      "category": "fiction"
+    },
+    {
+      "id": 6,
+      "title": "The Art of War",
+      "text": "The art of war is of vital importance to the State the road to survival",
+      "category": "non-fiction"
+    }
+  ],
+  "cases": [
+    {
+      "name": "basic_or",
+      "result": [
+        {
+          "id": 2,
+          "score": 12.337057944103243,
+          "terms": [
+            "zen",
+            "art",
+            "motorcycle"
+          ],
+          "queryTerms": [
+            "zen",
+            "art",
+            "motorcycle"
+          ],
+          "match": {
+            "zen": [
+              "title"
+            ],
+            "art": [
+              "title"
+            ],
+            "motorcycle": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Motorcycle Maintenance",
+          "category": "fiction"
+        },
+        {
+          "id": 4,
+          "score": 4.556706449681931,
+          "terms": [
+            "zen",
+            "art"
+          ],
+          "queryTerms": [
+            "zen",
+            "art"
+          ],
+          "match": {
+            "zen": [
+              "title"
+            ],
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Archery",
+          "category": "non-fiction"
+        },
+        {
+          "id": 6,
+          "score": 3.3471689293135953,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title",
+              "text"
+            ]
+          },
+          "title": "The Art of War",
+          "category": "non-fiction"
+        }
+      ]
+    },
+    {
+      "name": "single_term",
+      "result": [
+        {
+          "id": 6,
+          "score": 3.3471689293135953,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title",
+              "text"
+            ]
+          },
+          "title": "The Art of War",
+          "category": "non-fiction"
+        },
+        {
+          "id": 4,
+          "score": 0.9166848928861697,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Archery",
+          "category": "non-fiction"
+        },
+        {
+          "id": 2,
+          "score": 0.8735154072320945,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Motorcycle Maintenance",
+          "category": "fiction"
+        }
+      ]
+    },
+    {
+      "name": "fields_title_only",
+      "result": [
+        {
+          "id": 6,
+          "score": 1.028401882199359,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ]
+          },
+          "title": "The Art of War",
+          "category": "non-fiction"
+        },
+        {
+          "id": 4,
+          "score": 0.9166848928861697,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Archery",
+          "category": "non-fiction"
+        },
+        {
+          "id": 2,
+          "score": 0.8735154072320945,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Motorcycle Maintenance",
+          "category": "fiction"
+        }
+      ]
+    },
+    {
+      "name": "boost_title",
+      "result": [
+        {
+          "id": 6,
+          "score": 4.375570811512954,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title",
+              "text"
+            ]
+          },
+          "title": "The Art of War",
+          "category": "non-fiction"
+        },
+        {
+          "id": 4,
+          "score": 1.8333697857723394,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Archery",
+          "category": "non-fiction"
+        },
+        {
+          "id": 2,
+          "score": 1.747030814464189,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Motorcycle Maintenance",
+          "category": "fiction"
+        }
+      ]
+    },
+    {
+      "name": "prefix",
+      "result": [
+        {
+          "id": 3,
+          "score": 0.9398319821832078,
+          "terms": [
+            "neuromancer"
+          ],
+          "queryTerms": [
+            "neuro"
+          ],
+          "match": {
+            "neuromancer": [
+              "title"
+            ]
+          },
+          "title": "Neuromancer",
+          "category": "fiction"
+        },
+        {
+          "id": 2,
+          "score": 0.6169366592012376,
+          "terms": [
+            "motorcycle"
+          ],
+          "queryTerms": [
+            "moto"
+          ],
+          "match": {
+            "motorcycle": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Motorcycle Maintenance",
+          "category": "fiction"
+        }
+      ]
+    },
+    {
+      "name": "fuzzy_frac",
+      "result": [
+        {
+          "id": 1,
+          "score": 0.9328767702324506,
+          "terms": [
+            "ishmael"
+          ],
+          "queryTerms": [
+            "ismael"
+          ],
+          "match": {
+            "ishmael": [
+              "text"
+            ]
+          },
+          "title": "Moby Dick",
+          "category": "fiction"
+        }
+      ]
+    },
+    {
+      "name": "fuzzy_int",
+      "result": [
+        {
+          "id": 6,
+          "score": 1.1296695136433386,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "artz"
+          ],
+          "match": {
+            "art": [
+              "title",
+              "text"
+            ]
+          },
+          "title": "The Art of War",
+          "category": "non-fiction"
+        },
+        {
+          "id": 4,
+          "score": 0.3093811513490823,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "artz"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Archery",
+          "category": "non-fiction"
+        },
+        {
+          "id": 2,
+          "score": 0.2948114499408319,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "artz"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Motorcycle Maintenance",
+          "category": "fiction"
+        }
+      ]
+    },
+    {
+      "name": "combine_and",
+      "result": [
+        {
+          "id": 4,
+          "score": 4.556706449681931,
+          "terms": [
+            "zen",
+            "art"
+          ],
+          "queryTerms": [
+            "zen",
+            "art"
+          ],
+          "match": {
+            "zen": [
+              "title"
+            ],
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Archery",
+          "category": "non-fiction"
+        },
+        {
+          "id": 2,
+          "score": 4.342117254162373,
+          "terms": [
+            "zen",
+            "art"
+          ],
+          "queryTerms": [
+            "zen",
+            "art"
+          ],
+          "match": {
+            "zen": [
+              "title"
+            ],
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Motorcycle Maintenance",
+          "category": "fiction"
+        }
+      ]
+    },
+    {
+      "name": "combine_and_not",
+      "result": [
+        {
+          "id": 4,
+          "score": 0.9166848928861697,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Archery",
+          "category": "non-fiction"
+        },
+        {
+          "id": 2,
+          "score": 0.8735154072320945,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Motorcycle Maintenance",
+          "category": "fiction"
+        }
+      ]
+    },
+    {
+      "name": "filter_fiction",
+      "result": [
+        {
+          "id": 2,
+          "score": 0.8735154072320945,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Motorcycle Maintenance",
+          "category": "fiction"
+        }
+      ]
+    },
+    {
+      "name": "wildcard",
+      "result": [
+        {
+          "id": 1,
+          "score": 1,
+          "terms": [],
+          "queryTerms": [],
+          "match": {},
+          "title": "Moby Dick",
+          "category": "fiction"
+        },
+        {
+          "id": 2,
+          "score": 1,
+          "terms": [],
+          "queryTerms": [],
+          "match": {},
+          "title": "Zen and the Art of Motorcycle Maintenance",
+          "category": "fiction"
+        },
+        {
+          "id": 3,
+          "score": 1,
+          "terms": [],
+          "queryTerms": [],
+          "match": {},
+          "title": "Neuromancer",
+          "category": "fiction"
+        },
+        {
+          "id": 4,
+          "score": 1,
+          "terms": [],
+          "queryTerms": [],
+          "match": {},
+          "title": "Zen and the Art of Archery",
+          "category": "non-fiction"
+        },
+        {
+          "id": 5,
+          "score": 1,
+          "terms": [],
+          "queryTerms": [],
+          "match": {},
+          "title": "Pride and Prejudice",
+          "category": "fiction"
+        },
+        {
+          "id": 6,
+          "score": 1,
+          "terms": [],
+          "queryTerms": [],
+          "match": {},
+          "title": "The Art of War",
+          "category": "non-fiction"
+        }
+      ]
+    },
+    {
+      "name": "wildcard_filtered",
+      "result": [
+        {
+          "id": 4,
+          "score": 1,
+          "terms": [],
+          "queryTerms": [],
+          "match": {},
+          "title": "Zen and the Art of Archery",
+          "category": "non-fiction"
+        },
+        {
+          "id": 6,
+          "score": 1,
+          "terms": [],
+          "queryTerms": [],
+          "match": {},
+          "title": "The Art of War",
+          "category": "non-fiction"
+        }
+      ]
+    },
+    {
+      "name": "query_tree",
+      "result": [
+        {
+          "id": 4,
+          "score": 11.435337875545738,
+          "terms": [
+            "zen",
+            "archery"
+          ],
+          "queryTerms": [
+            "zen",
+            "archery"
+          ],
+          "match": {
+            "zen": [
+              "title"
+            ],
+            "archery": [
+              "title",
+              "text"
+            ]
+          },
+          "title": "Zen and the Art of Archery",
+          "category": "non-fiction"
+        },
+        {
+          "id": 2,
+          "score": 6.477674481604639,
+          "terms": [
+            "zen",
+            "motorcycle"
+          ],
+          "queryTerms": [
+            "zen",
+            "motorcycle"
+          ],
+          "match": {
+            "zen": [
+              "title"
+            ],
+            "motorcycle": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Motorcycle Maintenance",
+          "category": "fiction"
+        }
+      ]
+    },
+    {
+      "name": "boost_term",
+      "result": [
+        {
+          "id": 4,
+          "score": 10.003379777501115,
+          "terms": [
+            "zen",
+            "art"
+          ],
+          "queryTerms": [
+            "zen",
+            "art"
+          ],
+          "match": {
+            "zen": [
+              "title"
+            ],
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Archery",
+          "category": "non-fiction"
+        },
+        {
+          "id": 2,
+          "score": 9.532290133558739,
+          "terms": [
+            "zen",
+            "art"
+          ],
+          "queryTerms": [
+            "zen",
+            "art"
+          ],
+          "match": {
+            "zen": [
+              "title"
+            ],
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Motorcycle Maintenance",
+          "category": "fiction"
+        },
+        {
+          "id": 6,
+          "score": 3.3471689293135953,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title",
+              "text"
+            ]
+          },
+          "title": "The Art of War",
+          "category": "non-fiction"
+        }
+      ]
+    },
+    {
+      "name": "boost_document",
+      "result": [
+        {
+          "id": 6,
+          "score": 16.735844646567976,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title",
+              "text"
+            ]
+          },
+          "title": "The Art of War",
+          "category": "non-fiction"
+        },
+        {
+          "id": 4,
+          "score": 0.9166848928861697,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Archery",
+          "category": "non-fiction"
+        },
+        {
+          "id": 2,
+          "score": 0.8735154072320945,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Motorcycle Maintenance",
+          "category": "fiction"
+        }
+      ]
+    },
+    {
+      "name": "weights",
+      "result": [
+        {
+          "id": 2,
+          "score": 4.70832677863013,
+          "terms": [
+            "art",
+            "motorcycle"
+          ],
+          "queryTerms": [
+            "art",
+            "moto"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ],
+            "motorcycle": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Motorcycle Maintenance",
+          "category": "fiction"
+        },
+        {
+          "id": 6,
+          "score": 3.3471689293135953,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title",
+              "text"
+            ]
+          },
+          "title": "The Art of War",
+          "category": "non-fiction"
+        },
+        {
+          "id": 4,
+          "score": 1.0712693626937855,
+          "terms": [
+            "art",
+            "at"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ],
+            "at": [
+              "text"
+            ]
+          },
+          "title": "Zen and the Art of Archery",
+          "category": "non-fiction"
+        }
+      ]
+    },
+    {
+      "name": "bm25_params",
+      "result": [
+        {
+          "id": 6,
+          "score": 4.464348602090482,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title",
+              "text"
+            ]
+          },
+          "title": "The Art of War",
+          "category": "non-fiction"
+        },
+        {
+          "id": 4,
+          "score": 1.276405173957948,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Archery",
+          "category": "non-fiction"
+        },
+        {
+          "id": 2,
+          "score": 1.2366375834989933,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Motorcycle Maintenance",
+          "category": "fiction"
+        }
+      ]
+    },
+    {
+      "name": "prefix_fn",
+      "result": [
+        {
+          "id": 6,
+          "score": 3.3471689293135953,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title",
+              "text"
+            ]
+          },
+          "title": "The Art of War",
+          "category": "non-fiction"
+        },
+        {
+          "id": 2,
+          "score": 2.980904132866664,
+          "terms": [
+            "art",
+            "motorcycle"
+          ],
+          "queryTerms": [
+            "art",
+            "moto"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ],
+            "motorcycle": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Motorcycle Maintenance",
+          "category": "fiction"
+        },
+        {
+          "id": 4,
+          "score": 0.9166848928861697,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Archery",
+          "category": "non-fiction"
+        }
+      ]
+    },
+    {
+      "name": "empty_query",
+      "result": []
+    },
+    {
+      "name": "no_match",
+      "result": []
+    },
+    {
+      "name": "autosuggest_neuro",
+      "result": [
+        {
+          "suggestion": "neuromancer",
+          "terms": [
+            "neuromancer"
+          ],
+          "score": 0.9398319821832078
+        }
+      ]
+    },
+    {
+      "name": "autosuggest_zen_ar",
+      "result": [
+        {
+          "suggestion": "zen archery art",
+          "terms": [
+            "zen",
+            "archery",
+            "art"
+          ],
+          "score": 6.038820053294481
+        },
+        {
+          "suggestion": "zen art",
+          "terms": [
+            "zen",
+            "art"
+          ],
+          "score": 3.190665126447339
+        }
+      ]
+    },
+    {
+      "name": "autosuggest_fuzzy",
+      "result": [
+        {
+          "suggestion": "art",
+          "terms": [
+            "art"
+          ],
+          "score": 0.5779540383110843
+        }
+      ]
+    },
+    {
+      "name": "after_remove",
+      "result": [
+        {
+          "id": 4,
+          "score": 5.652481201807582,
+          "terms": [
+            "zen",
+            "art"
+          ],
+          "queryTerms": [
+            "zen",
+            "art"
+          ],
+          "match": {
+            "zen": [
+              "title"
+            ],
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Archery",
+          "category": "non-fiction"
+        },
+        {
+          "id": 6,
+          "score": 3.3163589900989354,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title",
+              "text"
+            ]
+          },
+          "title": "The Art of War",
+          "category": "non-fiction"
+        }
+      ]
+    },
+    {
+      "name": "after_discard",
+      "result": [
+        {
+          "id": 4,
+          "score": 5.652481201807582,
+          "terms": [
+            "zen",
+            "art"
+          ],
+          "queryTerms": [
+            "zen",
+            "art"
+          ],
+          "match": {
+            "zen": [
+              "title"
+            ],
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Archery",
+          "category": "non-fiction"
+        },
+        {
+          "id": 6,
+          "score": 3.3163589900989354,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title",
+              "text"
+            ]
+          },
+          "title": "The Art of War",
+          "category": "non-fiction"
+        }
+      ]
+    },
+    {
+      "name": "after_replace",
+      "result": [
+        {
+          "id": 2,
+          "score": 3.7234757275465373,
+          "terms": [
+            "motorcycle"
+          ],
+          "queryTerms": [
+            "motorcycle"
+          ],
+          "match": {
+            "motorcycle": [
+              "text"
+            ]
+          },
+          "title": "Zen Updated",
+          "category": "fiction"
+        }
+      ]
+    },
+    {
+      "name": "counts",
+      "result": {
+        "documentCount": 6,
+        "termCount": 71,
+        "has1": true,
+        "has99": false,
+        "stored2": {
+          "title": "Zen and the Art of Motorcycle Maintenance",
+          "category": "fiction"
+        }
+      }
+    },
+    {
+      "name": "process_term_array",
+      "result": [
+        {
+          "id": 1,
+          "score": 0.2734823351909319,
+          "terms": [
+            "pound"
+          ],
+          "queryTerms": [
+            "pound"
+          ],
+          "match": {
+            "pound": [
+              "title"
+            ]
+          }
+        },
+        {
+          "id": 2,
+          "score": 0.2734823351909319,
+          "terms": [
+            "pound"
+          ],
+          "queryTerms": [
+            "pound"
+          ],
+          "match": {
+            "pound": [
+              "title"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "tok_whitespace",
+      "result": [
+        {
+          "id": 1,
+          "score": 7.223836825955618,
+          "terms": [
+            "hello",
+            "world"
+          ],
+          "queryTerms": [
+            "hello",
+            "world"
+          ],
+          "match": {
+            "hello": [
+              "t"
+            ],
+            "world": [
+              "t"
+            ]
+          },
+          "t": "  hello   world  "
+        }
+      ]
+    },
+    {
+      "name": "tok_unicode",
+      "result": [
+        {
+          "id": 2,
+          "score": 7.223836825955618,
+          "terms": [
+            "café",
+            "résumé"
+          ],
+          "queryTerms": [
+            "café",
+            "résumé"
+          ],
+          "match": {
+            "café": [
+              "t"
+            ],
+            "résumé": [
+              "t"
+            ]
+          },
+          "t": "café RÉSUMÉ naïve"
+        }
+      ]
+    },
+    {
+      "name": "tok_hyphen",
+      "result": [
+        {
+          "id": 3,
+          "score": 2.1242508674026572,
+          "terms": [
+            "term"
+          ],
+          "queryTerms": [
+            "term"
+          ],
+          "match": {
+            "term": [
+              "t"
+            ]
+          },
+          "t": "short-term, long-term!"
+        }
+      ]
+    },
+    {
+      "name": "tok_control",
+      "result": []
+    },
+    {
+      "name": "termCount_edge",
+      "result": 10
+    },
+    {
+      "name": "serialized",
+      "result": {
+        "documentCount": 6,
+        "nextId": 6,
+        "documentIds": {
+          "0": 1,
+          "1": 2,
+          "2": 3,
+          "3": 4,
+          "4": 5,
+          "5": 6
+        },
+        "fieldIds": {
+          "title": 0,
+          "text": 1
+        },
+        "fieldLength": {
+          "0": [
+            2,
+            11
+          ],
+          "1": [
+            7,
+            13
+          ],
+          "2": [
+            1,
+            14
+          ],
+          "3": [
+            6,
+            12
+          ],
+          "4": [
+            3,
+            11
+          ],
+          "5": [
+            4,
+            12
+          ]
+        },
+        "averageFieldLength": [
+          3.8333333333333335,
+          12.166666666666666
+        ],
+        "storedFields": {
+          "0": {
+            "title": "Moby Dick",
+            "category": "fiction"
+          },
+          "1": {
+            "title": "Zen and the Art of Motorcycle Maintenance",
+            "category": "fiction"
+          },
+          "2": {
+            "title": "Neuromancer",
+            "category": "fiction"
+          },
+          "3": {
+            "title": "Zen and the Art of Archery",
+            "category": "non-fiction"
+          },
+          "4": {
+            "title": "Pride and Prejudice",
+            "category": "fiction"
+          },
+          "5": {
+            "title": "The Art of War",
+            "category": "non-fiction"
+          }
+        },
+        "dirtCount": 0,
+        "index": [
+          [
+            "road",
+            {
+              "1": {
+                "5": 1
+              }
+            }
+          ],
+          [
+            "vital",
+            {
+              "1": {
+                "5": 1
+              }
+            }
+          ],
+          [
+            "universally",
+            {
+              "1": {
+                "4": 1
+              }
+            }
+          ],
+          [
+            "unreasonable",
+            {
+              "1": {
+                "3": 1
+              }
+            }
+          ],
+          [
+            "first",
+            {
+              "1": {
+                "3": 1
+              }
+            }
+          ],
+          [
+            "from",
+            {
+              "1": {
+                "1": 1
+              }
+            }
+          ],
+          [
+            "dead",
+            {
+              "1": {
+                "2": 1
+              }
+            }
+          ],
+          [
+            "dick",
+            {
+              "0": {
+                "0": 1
+              }
+            }
+          ],
+          [
+            "channel",
+            {
+              "1": {
+                "2": 1
+              }
+            }
+          ],
+          [
+            "color",
+            {
+              "1": {
+                "2": 1
+              }
+            }
+          ],
+          [
+            "can",
+            {
+              "1": {
+                "1": 1
+              }
+            }
+          ],
+          [
+            "call",
+            {
+              "1": {
+                "0": 1
+              }
+            }
+          ],
+          [
+            "possession",
+            {
+              "1": {
+                "4": 1
+              }
+            }
+          ],
+          [
+            "port",
+            {
+              "1": {
+                "2": 1
+              }
+            }
+          ],
+          [
+            "prejudice",
+            {
+              "0": {
+                "4": 1
+              }
+            }
+          ],
+          [
+            "precisely",
+            {
+              "1": {
+                "0": 1
+              }
+            }
+          ],
+          [
+            "pride",
+            {
+              "0": {
+                "4": 1
+              }
+            }
+          ],
+          [
+            "neuromancer",
+            {
+              "0": {
+                "2": 1
+              }
+            }
+          ],
+          [
+            "never",
+            {
+              "1": {
+                "0": 1
+              }
+            }
+          ],
+          [
+            "grip",
+            {
+              "1": {
+                "1": 1
+              }
+            }
+          ],
+          [
+            "left",
+            {
+              "1": {
+                "1": 1
+              }
+            }
+          ],
+          [
+            "long",
+            {
+              "1": {
+                "0": 1
+              }
+            }
+          ],
+          [
+            "highly",
+            {
+              "1": {
+                "3": 1
+              }
+            }
+          ],
+          [
+            "hand",
+            {
+              "1": {
+                "1": 1
+              }
+            }
+          ],
+          [
+            "how",
+            {
+              "1": {
+                "0": 1
+              }
+            }
+          ],
+          [
+            "that",
+            {
+              "1": {
+                "4": 1
+              }
+            }
+          ],
+          [
+            "the",
+            {
+              "0": {
+                "1": 1,
+                "3": 1,
+                "5": 1
+              },
+              "1": {
+                "1": 1,
+                "2": 3,
+                "5": 3
+              }
+            }
+          ],
+          [
+            "truth",
+            {
+              "1": {
+                "4": 1
+              }
+            }
+          ],
+          [
+            "to",
+            {
+              "1": {
+                "2": 1,
+                "3": 1,
+                "5": 2
+              }
+            }
+          ],
+          [
+            "tuned",
+            {
+              "1": {
+                "2": 1
+              }
+            }
+          ],
+          [
+            "television",
+            {
+              "1": {
+                "2": 1
+              }
+            }
+          ],
+          [
+            "taking",
+            {
+              "1": {
+                "1": 1
+              }
+            }
+          ],
+          [
+            "war",
+            {
+              "0": {
+                "5": 1
+              },
+              "1": {
+                "5": 1
+              }
+            }
+          ],
+          [
+            "was",
+            {
+              "1": {
+                "2": 1
+              }
+            }
+          ],
+          [
+            "watch",
+            {
+              "1": {
+                "1": 1
+              }
+            }
+          ],
+          [
+            "without",
+            {
+              "1": {
+                "1": 1
+              }
+            }
+          ],
+          [
+            "by",
+            {
+              "1": {
+                "1": 1
+              }
+            }
+          ],
+          [
+            "survival",
+            {
+              "1": {
+                "5": 1
+              }
+            }
+          ],
+          [
+            "state",
+            {
+              "1": {
+                "5": 1
+              }
+            }
+          ],
+          [
+            "single",
+            {
+              "1": {
+                "4": 1
+              }
+            }
+          ],
+          [
+            "sight",
+            {
+              "1": {
+                "3": 1
+              }
+            }
+          ],
+          [
+            "speak",
+            {
+              "1": {
+                "3": 1
+              }
+            }
+          ],
+          [
+            "sky",
+            {
+              "1": {
+                "2": 1
+              }
+            }
+          ],
+          [
+            "seem",
+            {
+              "1": {
+                "3": 1
+              }
+            }
+          ],
+          [
+            "see",
+            {
+              "1": {
+                "1": 1
+              }
+            }
+          ],
+          [
+            "some",
+            {
+              "1": {
+                "0": 1
+              }
+            }
+          ],
+          [
+            "importance",
+            {
+              "1": {
+                "5": 1
+              }
+            }
+          ],
+          [
+            "in",
+            {
+              "1": {
+                "4": 1
+              }
+            }
+          ],
+          [
+            "is",
+            {
+              "1": {
+                "4": 1,
+                "5": 1
+              }
+            }
+          ],
+          [
+            "ishmael",
+            {
+              "1": {
+                "0": 1
+              }
+            }
+          ],
+          [
+            "it",
+            {
+              "1": {
+                "3": 1,
+                "4": 1
+              }
+            }
+          ],
+          [
+            "i",
+            {
+              "1": {
+                "1": 1
+              }
+            }
+          ],
+          [
+            "of",
+            {
+              "0": {
+                "1": 1,
+                "3": 1,
+                "5": 1
+              },
+              "1": {
+                "2": 1,
+                "3": 1,
+                "5": 2
+              }
+            }
+          ],
+          [
+            "acknowledged",
+            {
+              "1": {
+                "4": 1
+              }
+            }
+          ],
+          [
+            "at",
+            {
+              "1": {
+                "3": 1
+              }
+            }
+          ],
+          [
+            "archery",
+            {
+              "0": {
+                "3": 1
+              },
+              "1": {
+                "3": 1
+              }
+            }
+          ],
+          [
+            "art",
+            {
+              "0": {
+                "1": 1,
+                "3": 1,
+                "5": 1
+              },
+              "1": {
+                "5": 1
+              }
+            }
+          ],
+          [
+            "a",
+            {
+              "1": {
+                "2": 1,
+                "4": 2
+              }
+            }
+          ],
+          [
+            "above",
+            {
+              "1": {
+                "2": 1
+              }
+            }
+          ],
+          [
+            "and",
+            {
+              "0": {
+                "1": 1,
+                "3": 1,
+                "4": 1
+              }
+            }
+          ],
+          [
+            "ago",
+            {
+              "1": {
+                "0": 1
+              }
+            }
+          ],
+          [
+            "zen",
+            {
+              "0": {
+                "1": 1,
+                "3": 1
+              }
+            }
+          ],
+          [
+            "years",
+            {
+              "1": {
+                "0": 1
+              }
+            }
+          ],
+          [
+            "man",
+            {
+              "1": {
+                "4": 1
+              }
+            }
+          ],
+          [
+            "maintenance",
+            {
+              "0": {
+                "1": 1
+              }
+            }
+          ],
+          [
+            "must",
+            {
+              "1": {
+                "3": 1
+              }
+            }
+          ],
+          [
+            "my",
+            {
+              "1": {
+                "1": 2
+              }
+            }
+          ],
+          [
+            "motorcycle",
+            {
+              "0": {
+                "1": 1
+              }
+            }
+          ],
+          [
+            "moby",
+            {
+              "0": {
+                "0": 1
+              }
+            }
+          ],
+          [
+            "mind",
+            {
+              "1": {
+                "0": 1
+              }
+            }
+          ],
+          [
+            "me",
+            {
+              "1": {
+                "0": 1
+              }
+            }
+          ]
+        ],
+        "serializationVersion": 2
+      }
+    },
+    {
+      "name": "after_load",
+      "result": [
+        {
+          "id": 2,
+          "score": 12.337057944103243,
+          "terms": [
+            "zen",
+            "art",
+            "motorcycle"
+          ],
+          "queryTerms": [
+            "zen",
+            "art",
+            "motorcycle"
+          ],
+          "match": {
+            "zen": [
+              "title"
+            ],
+            "art": [
+              "title"
+            ],
+            "motorcycle": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Motorcycle Maintenance",
+          "category": "fiction"
+        },
+        {
+          "id": 4,
+          "score": 4.556706449681931,
+          "terms": [
+            "zen",
+            "art"
+          ],
+          "queryTerms": [
+            "zen",
+            "art"
+          ],
+          "match": {
+            "zen": [
+              "title"
+            ],
+            "art": [
+              "title"
+            ]
+          },
+          "title": "Zen and the Art of Archery",
+          "category": "non-fiction"
+        },
+        {
+          "id": 6,
+          "score": 3.3471689293135953,
+          "terms": [
+            "art"
+          ],
+          "queryTerms": [
+            "art"
+          ],
+          "match": {
+            "art": [
+              "title",
+              "text"
+            ]
+          },
+          "title": "The Art of War",
+          "category": "non-fiction"
+        }
+      ]
+    }
+  ]
+}
