@@ -1,8 +1,54 @@
 AllCops:
-  TargetRubyVersion: 3.2
+  TargetRubyVersion: 2.4
+  NewCops: disable
+  SuggestExtensions: false
+  Exclude:
+    - "benchmarks/**/*"
+    - "tmp/**/*"
+    - "vendor/**/*"
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 
 Style/StringLiteralsInInterpolation:
   EnforcedStyle: double_quotes
+
+# The engine is a faithful port of a single large class; several methods are
+# inherently long or dense and are best read against the original source.
+Metrics:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: true
+
+# `x == 0` / `x == false` are deliberate: they replicate JavaScript truthiness.
+Style/NumericPredicate:
+  Enabled: false
+
+Naming/PredicatePrefix:
+  Enabled: false
+
+# Short names are the ported source's mathematical notation: BM25 params (k, b,
+# d), Levenshtein matrix dimensions (m, n) and indices (i, j), and combinator
+# operands (a, b).
+Naming/MethodParameterName:
+  Enabled: false
+
+Naming/BlockParameterName:
+  Enabled: false
+
+# `.keys.each` is intentional: it materializes a snapshot so the underlying Hash
+# can be mutated safely during iteration (lazy index cleanup, vacuuming).
+Style/HashEachMethods:
+  Enabled: false
+
+# Explicit `if collection` guards around iteration mirror the ported source's
+# `if (prefixMatches) { ... }` structure and read more clearly than a chained
+# safe-navigation `&.each`.
+Style/SafeNavigation:
+  Enabled: false
+
+# Mixed hash usage (symbol metadata keys + string stored-field keys) is intrinsic
+# to the result shape.
+Style/HashSyntax:
+  EnforcedShorthandSyntax: never
