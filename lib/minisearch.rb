@@ -586,7 +586,10 @@ class Minisearch
     field_name = @field_ids.key(field_id)
     return if field_name.nil?
 
-    @options[:logger].call(
+    logger = @options[:logger]
+    return if logger.nil?
+
+    logger.call(
       "warn",
       "Minisearch: document with ID #{@document_ids[short_document_id]} has changed before " \
       "removal: term \"#{term}\" was not present in field \"#{field_name}\". Removing a " \

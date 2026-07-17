@@ -12,8 +12,7 @@ timestamp: 2026-07-17
 `Minisearch` (in `lib/minisearch.rb`) is the engine. It owns the forward maps
 (document → stored fields, per-field lengths, averages) and delegates the inverted
 index to a [radix tree](/architecture/radix-tree-index.md) per field. The API is
-in the [README](../../README.md); what follows is the design that isn't visible
-there.
+in the README; what follows is the design that isn't visible there.
 
 # The search pipeline
 

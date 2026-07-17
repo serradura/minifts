@@ -21,11 +21,19 @@ diverge, a test fails.
 | `test/golden.json` | every documented feature, one case each, with the exact JS output | behaviour coverage |
 | `test/fuzz.json` | 250 documents + hundreds of randomly generated queries with random options, each with its JS result | scoring / prefix / fuzzy / combinator paths across a wide input space |
 | `test/lifecycle.json` | a scripted add / remove / discard / replace / vacuum sequence with JS-produced states | the mutation lifecycle |
+| `test/ranking.json` | the reference's movie & song ranking sets with their JS-produced result orderings | curated ranking correctness (exact vs prefix vs fuzzy, short vs long fields, term rarity) |
 
 Scores are asserted equal within `FLOAT_TOLERANCE = 1e-9`. The full suite runs
-**149,330 assertions** green, including on Ruby 2.4. A separate test asserts the
-serialized index is *byte-identical* to the JS output — which is what certifies the
-[radix tree's](/architecture/radix-tree-index.md) iteration order.
+**150,409 assertions** across **169 runs** green, including on Ruby 2.4. A separate
+test asserts the serialized index is *byte-identical* to the JS output — which is
+what certifies the [radix tree's](/architecture/radix-tree-index.md) iteration
+order.
+
+Alongside the fixtures, a hand-ported parity suite mirrors the reference's own
+(non-async) test assertions — the `add` / `remove` / `discard` / `replace`
+pipelines, search options, query trees, match data, auto-suggest, non-latin
+tokenization, and `serializationVersion 1` loading — so behavioural coverage
+tracks the reference case-for-case, not just the scored fixtures.
 
 # Regenerating the fixtures
 
@@ -40,5 +48,5 @@ oracle and starts being a hand-written expectation that can agree with a bug.
 # Citations
 
 [1] `test/test_fuzz.rb`, `test/test_golden.rb`, `test/test_lifecycle.rb`.
-[2] Full-suite run (Ruby 2.7 container, 2026-07-17): `71 runs, 149330 assertions, 0 failures`.
+[2] Full-suite run (Ruby 2.7 container, 2026-07-17): `169 runs, 150409 assertions, 0 failures`.
 [3] Reference implementation: `tmp/minisearch/src/`.

@@ -11,8 +11,7 @@ timestamp: 2026-07-17
 
 `Minisearch::SearchableMap` is the inverted index's substrate: a radix tree
 (compressed prefix trie) that behaves like a `Map` but also answers `at_prefix`
-and `fuzzy_get`. It is exported for standalone use (see
-[README](../../README.md#the-radix-tree)).
+and `fuzzy_get`. It is exported for standalone use (see the README).
 
 # Structure
 

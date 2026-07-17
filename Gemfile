@@ -21,3 +21,11 @@ if RUBY_VERSION >= "2.7"
   # plain `ruby -Ilib`, not `bundle exec`, so the installed okf resolves.
   gem "benchmark-ips", "~> 2.0"
 end
+
+# Auto-tuning harness (benchmarks/harness.rb) only — never in CI, never a gem
+# dependency. memory_profiler needs Ruby 3.1+, so the whole tuning toolchain sits
+# behind that floor; correctness on the 2.4 floor is proven in CI instead.
+if RUBY_VERSION >= "3.1"
+  gem "memory_profiler", "~> 1.0"
+  gem "stackprof", "~> 0.2"
+end

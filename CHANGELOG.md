@@ -16,5 +16,9 @@
 - JSON serialization interchangeable with the JavaScript library
   (`to_json` / `load_json`).
 - Runs on every Ruby since 2.4; no runtime dependencies.
+- Configurable `logger` for index-corruption warnings; setting `logger: nil`
+  silences them without raising.
 - Verified bit-for-bit against the reference JavaScript implementation via
-  golden and randomized differential tests.
+  golden and randomized differential tests, plus a full parity suite mirroring
+  the reference's own (non-async) test cases, including the movie/song ranking
+  sets.

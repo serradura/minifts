@@ -12,3 +12,8 @@
 # A conditional Gemfile (tooling gated on Ruby version) has no single
 # lockfile valid across the 2.4-4.0 matrix; resolve per-Ruby instead.
 Gemfile.lock
+
+# Auto-tuning scorecards/baselines are per-machine (absolute timings), so they
+# are generated locally, not committed. The frozen evaluator that produces them
+# (benchmarks/harness.rb, benchmarks/tuning/) IS committed.
+/benchmarks/tuning/*.json
