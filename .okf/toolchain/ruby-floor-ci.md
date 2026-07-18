@@ -3,7 +3,7 @@ type: Runbook
 title: Ruby-floor CI
 description: How the conditional Gemfile, the degrading Rake default, the ignored lockfile, and the 2.4→4.0 matrix keep the suite green on every supported Ruby while using modern tooling where it exists.
 tags: [ruby-floor, testing, okf]
-timestamp: 2026-07-17
+timestamp: 2026-07-18
 ---
 
 # Overview
@@ -41,7 +41,20 @@ and 2.7+ jobs run tests + RuboCop, all from the one degrading default task. Loca
 the same result is proven in a `ruby:2.4` container (tests) and a `ruby:2.7` one
 (tests + RuboCop).
 
+# The second workflow: publishing this bundle
+
+`.github/workflows/okf.yml` renders `.okf/` to a single static page with the
+[`okf` gem](https://rubygems.org/gems/okf) and publishes it to GitHub Pages, on a
+merge to `main` that touched the bundle or on a manual `workflow_dispatch`. It
+pins one Ruby (3.4), not the matrix — the same tooling-versus-library split as
+above: the floor binds the *gem*, never the jobs that only read the repo. `okf
+validate` is a hard gate there (OKF §9 conformance is binary, and a bundle that
+fails it must not publish); `okf lint` runs `continue-on-error` because curation
+findings are advisory. Publishing needs Pages set to the "GitHub Actions" source
+once, in repository settings.
+
 # Citations
 
 [1] `Gemfile`, `Rakefile`, `.gitignore` (lockfile rationale), `.github/workflows/main.yml`.
 [2] Full matrix green (Ruby 2.4 → 4.0) on GitHub Actions, 2026-07-17.
+[3] `.github/workflows/okf.yml` — the bundle-publishing workflow (push-to-main on `.okf/**`, plus `workflow_dispatch`).

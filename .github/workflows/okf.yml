@@ -1,0 +1,75 @@
+name: OKF bundle
+
+# Renders .okf/ to a single static page and publishes it to GitHub Pages.
+# Two ways in: a merge to main that touched the bundle, or a manual run from
+# the Actions tab. Requires Settings -> Pages -> Source: "GitHub Actions".
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".okf/**"
+      - ".github/workflows/okf.yml"
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One publish at a time. A newer run waits rather than cancelling a deploy
+# already in flight, so Pages is never left half-updated.
+concurrency:
+  group: okf-pages
+  cancel-in-progress: false
+
+jobs:
+  render:
+    name: Render and publish
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      # The docs job is free to use a modern Ruby: the 2.4 floor binds the
+      # library, not the tooling that reads it (see .okf/toolchain/).
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+
+      - name: Install the okf CLI
+        run: gem install okf -v "~> 1.8" --no-document
+
+      # Conformance is binary (OKF §9) — a bundle that fails it must not ship.
+      - name: Validate the bundle
+        run: okf validate .okf
+
+      # Curation is advisory: report it, never block the publish on it.
+      - name: Lint the bundle
+        continue-on-error: true
+        run: okf lint .okf --stale-after 90d
+
+      - name: Render the bundle
+        run: |
+          mkdir -p _site
+          okf render .okf \
+            --output _site/index.html \
+            --title "MiniFTS" \
+            --link "https://github.com/${{ github.repository }}"
+
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v5
