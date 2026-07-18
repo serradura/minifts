@@ -55,6 +55,30 @@ serialized *term order* differs. This is fundamental to the two languages' strin
 model and is left as-is — it does not affect loading or search (the scenario still
 passes every functional invariant), only the byte order.
 
+# Operational note: a serialized index is not a canonical form
+
+`load_json` followed by `to_json` returns the same index data in a **different
+term order**, so the bytes change even though nothing about the index did. The
+[radix tree's](/architecture/radix-tree-index.md) DFS emits each node's children
+via `keys.reverse_each`; loading re-inserts the terms in that emitted order, so
+the next serialization reverses them again. The cycle has period two — a second
+load/dump returns to the original bytes.
+
+This is **faithful, not a defect**: `minisearch@7.2.0` does exactly the same
+thing, to the same bytes. Verified against the published `minifts` 1.0.0 gem on a
+3-document corpus (977 bytes each), Ruby vs JS:
+
+| Step | Ruby vs JavaScript | Within one runtime |
+|------|--------------------|--------------------|
+| fresh build → `to_json` | byte-identical | — |
+| `load_json` → `to_json` | byte-identical | reordered vs the fresh build |
+| second load/dump | byte-identical | back to the fresh-build bytes |
+
+The consequence is for *tooling*, not interop: content-hashing a serialized
+index, committing one to git, or comparing checksums across a load cycle will
+show spurious changes. Compare parsed data (as `parseEqual` does) rather than
+bytes, or always serialize from a freshly built index.
+
 # Operational note: vacuum before materializing
 
 A discarded-but-not-vacuumed index carries dirt (postings for removed documents).
@@ -71,3 +95,7 @@ fully equivalent.
     `bin/check_js.mjs`, `test/test_interchange.rb`; run with `rake compat`.
 [2] `lib/minifts.rb` — `to_json` (whole-float and field-id-order normalization).
 [3] `fidelity/README.md` — the invariants, boundaries, and scenario catalogue.
+[4] Round-trip check (2026-07-18) against the published `minifts` 1.0.0 gem and
+    `minisearch@7.2.0`: fresh build and reloaded re-serialization both
+    byte-identical across runtimes (977 B); load/dump reorders terms identically
+    in both, with period two.
