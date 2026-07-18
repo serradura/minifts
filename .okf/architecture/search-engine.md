@@ -26,6 +26,14 @@ the number of *matching* documents, not the corpus size — the reason the engin
 stays fast as the corpus grows, and why it
 [outruns a linear scan by ~50×](/benchmarks/okf-vs-minisearch.md) in practice.
 
+The per-document record accumulated as that pipeline runs — running score, matched
+query terms, per-term field hits — is carried as a **positional Array**
+`[score, terms, match]`, not a symbol-keyed Hash: it is transient (assembled per
+posting, merged by the combinators, transcribed into the public result Hash in
+`search`) and was the single largest search allocation. The *public* result stays a
+Hash; this is an internal, allocation-driven shape only, one of several such wins in
+[allocation-tuning](/benchmarks/allocation-tuning.md).
+
 # The dirt model: why discard is lazy
 
 `remove` needs the full original document (to reverse exactly what indexing did);

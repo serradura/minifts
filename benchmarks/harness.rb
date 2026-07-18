@@ -59,9 +59,11 @@ module Tuning
     }.freeze
     THROUGHPUT = SEARCH_OPTS.keys.freeze
 
-    # Composite-score inputs and their directions.
+    # Composite-score inputs and their directions. index_alloc_bytes (transient
+    # indexing churn) is included so a change cannot buy a little build speed with
+    # a large allocation increase — a gap that once let such a trade score ACCEPT.
     HIGHER_BETTER = (THROUGHPUT.map { |t| "#{t}_qps" } + %w[index_build_docs_per_s]).freeze
-    LOWER_BETTER  = %w[index_retained_bytes search_alloc_bytes].freeze
+    LOWER_BETTER  = %w[index_retained_bytes index_alloc_bytes search_alloc_bytes].freeze
 
     # A candidate metric counts as a regression only if it moves against us by
     # more than the measurement noise (throughput) or this flat guard (memory /

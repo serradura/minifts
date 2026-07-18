@@ -64,6 +64,11 @@ large concept documents (~11 s at 4,000). A few dozen queries repay it, so the
 index is a clear win for indexed-once-searched-often workloads and a wash for a
 single search over a tiny bundle.
 
+These minisearch-side figures predate the
+[allocation-tuning](/benchmarks/allocation-tuning.md) campaign, which sped indexing
+~37 % (and cut its memory ~4×) and search throughput ~15 %; the build cost is now
+correspondingly lower, and the multiple over the linear scan is unchanged-to-wider.
+
 # Running it
 
 Run with plain `ruby`, *not* `bundle exec`, so the installed okf gem resolves

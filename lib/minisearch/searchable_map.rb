@@ -213,9 +213,24 @@ class Minisearch
       pos = 0
 
       while node && pos < key_length
+        # Find the (unique) child edge whose first character is key[pos]. Edge
+        # labels from a node have distinct first characters, so we prefilter each
+        # edge on its first byte — getbyte allocates nothing — and only materialize
+        # the 1-char strings to confirm on a byte match. This finds the same edge
+        # as a direct char comparison while skipping the per-edge String
+        # allocations that dominated indexing, and stays correct for multibyte
+        # terms (café, résumé): a byte collision between different characters still
+        # falls through to the exact k[0] == key_char check.
+        key_char = key[pos]
+        key_byte = key_char.getbyte(0)
         found_k = nil
         node.each_key do |k|
-          if k != LEAF && k[0] == key[pos]
+          next if k == LEAF || k.getbyte(0) != key_byte
+
+          # start_with? confirms the full first character in place — same result as
+          # k[0] == key_char (key_char is exactly one character) but without
+          # allocating k[0] on every byte match.
+          if k.start_with?(key_char)
             found_k = k
             break
           end
@@ -311,11 +326,19 @@ class Minisearch
       (0...n).each { |j| matrix[j] = j }
       (1...m).each { |i| matrix[i * n] = i }
 
-      fuzzy_recurse(node, query, max_distance, results, matrix, 1, n, "")
+      # Descend comparing in integer codepoint space. query[j] and key[pos] each
+      # allocate a throwaway 1-char String, and query[j] runs on every Levenshtein
+      # matrix cell — together the dominant fuzzy-search allocation. Codepoints are
+      # immediate Integers, so equality on them is allocation-free and identical: a
+      # character equals another iff their codepoints match (multibyte included).
+      # Accumulate the matched term as a path of edge labels (push/pop, no
+      # allocation) and join it only at recorded leaves, rather than building a
+      # prefix String on every descent — most descents never record a result.
+      fuzzy_recurse(node, query.codepoints, max_distance, results, matrix, 1, n, [])
       results
     end
 
-    def fuzzy_recurse(node, query, max_distance, results, matrix, m, n, prefix)
+    def fuzzy_recurse(node, query_cps, max_distance, results, matrix, m, n, path)
       offset = m * n
 
       node.each_key do |key|
@@ -324,18 +347,18 @@ class Minisearch
           # A nil distance means the term is longer than any possible match
           # (matrix row out of range); mirror JS, where undefined <= n is false.
           distance = matrix[offset - 1]
-          results[prefix] = [node[key], distance] if !distance.nil? && distance <= max_distance
+          results[path.join] = [node[key], distance] if !distance.nil? && distance <= max_distance
           next
         end
 
         # Walk the characters of this edge, updating the matrix. Stop early if the
         # minimum distance in the current row exceeds the maximum: it can only
-        # grow from here, so no descendant can match.
+        # grow from here, so no descendant can match. Iterate the edge's codepoints
+        # on the fly with each_codepoint (immediate Integers, no per-edge array)
+        # rather than materializing key.codepoints — the top remaining allocation.
         i = m
         skip = false
-        pos = 0
-        while pos < key.length
-          char = key[pos]
+        key.each_codepoint do |char|
           this_row_offset = n * i
           prev_row_offset = this_row_offset - n
 
@@ -346,7 +369,7 @@ class Minisearch
 
           j = jmin
           while j < jmax
-            different = char == query[j] ? 0 : 1
+            different = char == query_cps[j] ? 0 : 1
             rpl = matrix[prev_row_offset + j] + different
             del = matrix[prev_row_offset + j + 1] + 1
             ins = matrix[this_row_offset + j] + 1
@@ -364,11 +387,14 @@ class Minisearch
             break
           end
 
-          pos += 1
           i += 1
         end
 
-        fuzzy_recurse(node[key], query, max_distance, results, matrix, i, n, prefix + key) unless skip
+        next if skip
+
+        path.push(key)
+        fuzzy_recurse(node[key], query_cps, max_distance, results, matrix, i, n, path)
+        path.pop
       end
     end
   end

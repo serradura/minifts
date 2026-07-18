@@ -15,5 +15,7 @@ Gemfile.lock
 
 # Auto-tuning scorecards/baselines are per-machine (absolute timings), so they
 # are generated locally, not committed. The frozen evaluator that produces them
-# (benchmarks/harness.rb, benchmarks/tuning/) IS committed.
+# (benchmarks/harness.rb, benchmarks/tuning/) IS committed. The loop's round
+# journal is a local running log (the durable per-win record is the git history).
 /benchmarks/tuning/*.json
+/benchmarks/tuning/log.md

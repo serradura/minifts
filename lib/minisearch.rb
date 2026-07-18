@@ -337,15 +337,16 @@ class Minisearch
     results = []
 
     raw_results.each do |doc_id, data|
-      terms = data[:terms]
+      terms = data[R_TERMS]
       quality = terms.empty? ? 1 : terms.length
 
+      match = data[R_MATCH]
       result = {
         id: @document_ids[doc_id],
-        score: data[:score] * quality,
-        terms: data[:match].keys,
+        score: data[R_SCORE] * quality,
+        terms: match.keys,
         query_terms: terms,
-        match: data[:match]
+        match: match
       }
 
       stored = @stored_fields[doc_id]
@@ -646,6 +647,20 @@ class Minisearch
 
   # --- query execution ----------------------------------------------------
 
+  # Positional slots for the internal per-document result record built during
+  # query execution. This record is transient: {#term_results} assembles it, the
+  # combinators merge it across query specs, and {#search} transcribes it into
+  # the public result Hash. Because it is never serialized and always has exactly
+  # these three fields, it is a small positional Array rather than a symbol-keyed
+  # Hash — an embedded 3-element Array is several times lighter than a 3-key Hash,
+  # and this record is the dominant search allocation. The MATCH slot stays a Hash
+  # (it is handed straight to the public output). JS keeps a plain object here;
+  # this positional form is a Ruby-side allocation optimization, output-identical.
+  R_SCORE = 0
+  R_TERMS = 1
+  R_MATCH = 2
+  private_constant :R_SCORE, :R_TERMS, :R_MATCH
+
   def execute_query(query, search_options = {})
     return execute_wildcard_query(search_options) if wildcard_query?(query)
 
@@ -743,7 +758,7 @@ class Minisearch
 
     @document_ids.each do |short_id, id|
       score = boost_document ? boost_document.call(id, "", @stored_fields[short_id]) : 1
-      results[short_id] = { score: score, terms: [], match: {} }
+      results[short_id] = [score, [], {}]
     end
 
     results
@@ -773,9 +788,9 @@ class Minisearch
       if existing.nil?
         a[doc_id] = b_value
       else
-        existing[:score] += b_value[:score]
-        existing[:match].merge!(b_value[:match])
-        assign_unique_terms(existing[:terms], b_value[:terms])
+        existing[R_SCORE] += b_value[R_SCORE]
+        existing[R_MATCH].merge!(b_value[R_MATCH])
+        assign_unique_terms(existing[R_TERMS], b_value[R_TERMS])
       end
     end
     a
@@ -787,12 +802,12 @@ class Minisearch
       existing = a[doc_id]
       next if existing.nil?
 
-      assign_unique_terms(existing[:terms], b_value[:terms])
-      combined[doc_id] = {
-        score: existing[:score] + b_value[:score],
-        terms: existing[:terms],
-        match: existing[:match].merge!(b_value[:match])
-      }
+      assign_unique_terms(existing[R_TERMS], b_value[R_TERMS])
+      combined[doc_id] = [
+        existing[R_SCORE] + b_value[R_SCORE],
+        existing[R_TERMS],
+        existing[R_MATCH].merge!(b_value[R_MATCH])
+      ]
     end
     combined
   end
@@ -839,20 +854,16 @@ class Minisearch
 
         result = results[doc_id]
         if result
-          result[:score] += weighted_score
-          assign_unique_term(result[:terms], source_term)
-          match = result[:match][derived_term]
+          result[R_SCORE] += weighted_score
+          assign_unique_term(result[R_TERMS], source_term)
+          match = result[R_MATCH][derived_term]
           if match
             match.push(field)
           else
-            result[:match][derived_term] = [field]
+            result[R_MATCH][derived_term] = [field]
           end
         else
-          results[doc_id] = {
-            score: weighted_score,
-            terms: [source_term],
-            match: { derived_term => [field] }
-          }
+          results[doc_id] = [weighted_score, [source_term], { derived_term => [field] }]
         end
       end
     end
@@ -893,7 +904,10 @@ class Minisearch
   # Stable descending sort by score, matching JavaScript's stable Array#sort:
   # equal scores keep their original relative order.
   def sort_by_score(results)
-    results.each_with_index.sort_by { |result, i| [-result[:score], i] }.map { |result, _| result }
+    # sort_by.with_index sorts the results directly, keeping the stable descending
+    # order (index breaks score ties, matching JS's stable sort) without the
+    # per-element [result, i] pairs and the trailing map that each_with_index needs.
+    results.sort_by.with_index { |result, i| [-result[:score], i] }
   end
 
   def wildcard_query?(query)

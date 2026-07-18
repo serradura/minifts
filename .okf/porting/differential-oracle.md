@@ -29,6 +29,11 @@ test asserts the serialized index is *byte-identical* to the JS output — which
 what certifies the [radix tree's](/architecture/radix-tree-index.md) iteration
 order.
 
+Because green here means byte-identical, this suite doubles as the hard correctness
+gate for performance work: it is Gate 0 of the
+[allocation-tuning](/benchmarks/allocation-tuning.md) harness, which may keep an
+optimisation only if the oracle still passes.
+
 Alongside the fixtures, a hand-ported parity suite mirrors the reference's own
 (non-async) test assertions — the `add` / `remove` / `discard` / `replace`
 pipelines, search options, query trees, match data, auto-suggest, non-latin

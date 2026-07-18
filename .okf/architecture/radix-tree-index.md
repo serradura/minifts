@@ -35,6 +35,16 @@ divergence node and returns a *view* rooted there rather than copying entries.
   recomputing per candidate. Its out-of-bounds handling is one of the subtler
   [porting gotchas](/porting/js-fidelity-gotchas.md#fuzzy-matrix-out-of-bounds).
 
+# Allocation-tuned hot paths
+
+`create_path` and `fuzzy_recurse` are the engine's hottest loops, so they avoid the
+throwaway one-character Strings that `key[pos]` and `k[0]` allocate: edge scans
+prefilter on `getbyte` and confirm the character in place with `start_with?`, and the
+fuzzy walk compares in integer codepoint space via `each_codepoint`. These are
+deliberate, allocation-driven divergences from a naive port — byte-identical in
+result, and the reason a reader finds `getbyte` where they expect character indexing.
+See [allocation-tuning](/benchmarks/allocation-tuning.md).
+
 # Citations
 
 [1] `lib/minisearch/searchable_map.rb` — `LEAF`, `dfs` (`keys.reverse_each`), `fuzzy_search` / `fuzzy_recurse`.
