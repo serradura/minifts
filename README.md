@@ -1,4 +1,9 @@
-# MiniFTS
+<h1 align="center">MiniFTS</h1>
+
+<p align="center">
+  A tiny, dependency-free full-text search engine for Ruby, held entirely in memory —<br>
+  a faithful, bit-for-bit port of the JavaScript <a href="https://github.com/lucaong/minisearch">MiniSearch</a> library.
+</p>
 
 <p align="center">
   <a href="https://rubygems.org/gems/minifts"><img src="https://img.shields.io/gem/v/minifts" alt="Gem version"></a>
@@ -8,11 +13,9 @@
   <a href="LICENSE.txt"><img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT"></a>
 </p>
 
-A tiny, dependency-free **full-text search engine** for Ruby, held entirely in
-memory. It is a faithful Ruby port of the excellent JavaScript
-[MiniSearch](https://github.com/lucaong/minisearch) library, with the same
-BM25+ scoring, prefix and fuzzy matching, boosting, query combinators,
-auto-suggestions, and JSON index format.
+It has the same BM25+ scoring, prefix and fuzzy matching, boosting, query
+combinators, auto-suggestions, and JSON index format as the original — the
+public API mirrors it, translated to idiomatic Ruby.
 
 - **Pure Ruby, zero runtime dependencies.** No native extensions, no database,
   no build step. It runs on the Ruby your OS already ships — the floor is
