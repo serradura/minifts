@@ -12,6 +12,8 @@ The [Ruby 2.4 floor](/decisions/ruby-2.4-floor.md) collides with modern dev
 tooling that has dropped old Rubies. The toolchain resolves this by gating each
 tool on the Ruby running it, so the *library* keeps its floor while the *developer
 experience* uses newer tools wherever they install. It mirrors okf's own setup.
+None of this reaches users: what the repository carries for development and what
+the [packaged gem ships](/toolchain/gem-packaging.md) are separate lists.
 
 # The four moving parts
 
