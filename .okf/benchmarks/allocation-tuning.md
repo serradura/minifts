@@ -3,8 +3,8 @@ type: Benchmark
 title: Allocation Tuning
 description: The frozen-evaluator campaign that cut minifts's indexing and search allocation several-fold — lifting throughput with it — while keeping output byte-identical to JavaScript.
 resource: benchmarks/harness.rb
-tags: [performance, fidelity]
-timestamp: 2026-07-17
+tags: [performance, fidelity, diagram]
+timestamp: 2026-07-18
 ---
 
 # Overview
@@ -34,6 +34,20 @@ lexicographically:
    harness.
 2. **Then, and only then, performance.** Allocated bytes (indexing and search) and
    build rate form the objective, scored against a saved baseline.
+
+```mermaid
+flowchart TD
+  C["candidate optimisation"] --> G0{"Gate 0 — differential oracle<br/>169 runs / 150,409 assertions"}
+  G0 -->|"any failure"| REJ["rejected outright,<br/>whatever it saves"]
+  G0 -->|"green = byte-identical"| OBJ{"objective vs saved baseline<br/>allocated bytes, then build rate"}
+  OBJ -->|"deterministic metric improves"| ACC["accepted, new baseline"]
+  OBJ -->|"no clear win, or<br/>throughput-only inside noise"| REJ
+  ACC --> C
+  REJ --> C
+
+  E["benchmarks/harness.rb + tuning/<br/>the evaluator — frozen, never edited<br/>by the optimiser"] -.-> G0
+  E -.-> OBJ
+```
 
 # What the objective must be measured on
 

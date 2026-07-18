@@ -3,7 +3,7 @@ type: Reference
 title: Ruby ⇄ JavaScript Interchange Suite
 description: The bidirectional fidelity suite that proves a serialized index built by one runtime loads and searches identically in the other, and the byte-identity boundary it maps.
 resource: fidelity/
-tags: [js-port, fidelity, testing]
+tags: [js-port, fidelity, testing, diagram]
 timestamp: 2026-07-18
 ---
 
@@ -28,6 +28,15 @@ Per scenario, three invariants — all green across all 32, both directions:
 - **rubyLoadsJs** — Ruby `load_json`s the JS index and returns JS's results.
 - **parseEqual** — the two serialized indexes carry the same data (order- and
   number-spelling-independent).
+
+```mermaid
+flowchart LR
+  RB["Ruby builds the index<br/>stage 1 · bin/build_ruby.rb"] --> RJ[("ruby index JSON")]
+  RJ -->|"jsLoadsRuby<br/>JS returns Ruby's results"| JS["real minisearch@7.2.0<br/>stage 2 · bin/check_js.mjs"]
+  JS --> JJ[("js index JSON")]
+  JJ -->|"rubyLoadsJs<br/>Ruby returns JS's results"| RL["Ruby load_json<br/>stage 3 · test/test_interchange.rb"]
+  RJ <-->|"parseEqual — same data either way"| JJ
+```
 
 Results match to 10 decimal places; **31/32 are also byte-for-byte identical**.
 

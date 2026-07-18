@@ -3,7 +3,7 @@ type: Component
 title: Radix-tree Index
 description: MiniFTS::SearchableMap, a compressed prefix tree with Map semantics plus prefix and fuzzy lookup, whose iteration order is byte-compatible with the JS SearchableMap.
 resource: lib/minifts/searchable_map.rb
-tags: [performance, fidelity]
+tags: [performance, fidelity, diagram]
 timestamp: 2026-07-18
 ---
 
@@ -21,6 +21,23 @@ fragments — and the reserved empty-string key `LEAF = ""` holds the value stor
 single edge, so `"motorcycle"` and `"motor"` share one edge until they diverge.
 That is what makes prefix search cheap: `at_prefix("moto")` walks to the
 divergence node and returns a *view* rooted there rather than copying entries.
+
+```mermaid
+flowchart TD
+  R(("root")) -->|"mo"| A(("branch"))
+  A -->|"tor"| B["LEAF: postings for 'motor'"]
+  A -->|"untain"| C["LEAF: postings for 'mountain'"]
+  B -->|"cycle"| D["LEAF: postings for 'motorcycle'"]
+
+  subgraph V ["at_prefix('moto') — a view rooted here, nothing copied"]
+    B
+    D
+  end
+```
+
+Edge labels are the compressed fragments — Hash keys on the parent node — and
+`LEAF` (the empty-string key) is where a node's own value lives. `"motor"` and
+`"motorcycle"` share the walk down to `B`; only `"cycle"` distinguishes them.
 
 # Two fidelity-critical behaviours
 

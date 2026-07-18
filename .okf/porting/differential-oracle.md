@@ -2,7 +2,7 @@
 type: Playbook
 title: Differential Oracle
 description: How the original JavaScript MiniSearch generates the expected outputs the Ruby test suite replays and asserts against, to prove bit-for-bit fidelity.
-tags: [js-port, fidelity, testing]
+tags: [js-port, fidelity, testing, diagram]
 timestamp: 2026-07-18
 ---
 
@@ -13,6 +13,27 @@ checked against hand-written expectations — it is checked against the *real
 JavaScript library*, used as an oracle. The JS original runs the inputs and its
 outputs are frozen into JSON fixtures the Ruby suite replays. If Ruby and JS ever
 diverge, a test fails.
+
+```mermaid
+flowchart LR
+  REF["reference implementation<br/>tmp/minisearch/src/<br/>node --experimental-strip-types"]
+  IN["inputs: documents,<br/>queries, options, scripts"]
+  FX[("frozen fixtures<br/>golden · fuzz · lifecycle · ranking")]
+  RUBY["Ruby suite replays<br/>the same inputs"]
+  CMP{"compare"}
+
+  IN --> REF
+  REF -->|"JS output, generated once"| FX
+  IN --> RUBY
+  FX --> CMP
+  RUBY --> CMP
+  CMP -->|"scores within 1e-9<br/>index byte-identical"| PASS["green"]
+  CMP -->|"any divergence"| FAIL["red — the port drifted"]
+```
+
+The arrow that matters is the one that does **not** exist: nothing runs from the
+Ruby side back into the fixtures. Regeneration comes only from the reference,
+which is what keeps the fixtures an oracle rather than an expectation.
 
 # The fixtures
 
