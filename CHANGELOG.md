@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+- `to_json` now renders whole-valued `averageFieldLength` entries as integers
+  (`4`, not `4.0`) and sorts each term's field ids ascending, matching
+  JavaScript's `JSON.stringify` output. A Ruby-serialized index is now
+  byte-identical to the JavaScript library's for any corpus without
+  astral-plane (above U+FFFF) characters. Loading is unaffected.
+- Added `compatibility/`, a bidirectional Ruby ⇄ JavaScript index interchange
+  suite (`rake compat`) covering 32 scenarios.
+
 ## [0.1.0] - 2026-07-17
 
 - Initial release: a pure-Ruby port of the JavaScript

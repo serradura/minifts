@@ -12,6 +12,19 @@ Rake::TestTask.new(:test) do |t|
   t.warning = false
 end
 
+# Ruby <-> JavaScript index interchange suite. Kept out of `test`/`default`
+# because it needs Node and the real `minisearch` npm package; the pure-Ruby
+# suite (including the Ruby 2.4 floor) must not depend on either.
+desc "Run the Ruby <-> JavaScript index interchange suite (needs Node in compatibility/)"
+task :compat do
+  Dir.chdir("compatibility") do
+    sh "npm install --silent" unless Dir.exist?("node_modules")
+    sh "ruby bin/build_ruby.rb"      # stage 1: Ruby produces the index fixtures
+    sh "node bin/check_js.mjs"       # stage 2: JS loads them + builds native
+    sh "ruby -Itest test/test_interchange.rb" # stage 3: Ruby loads the JS indexes
+  end
+end
+
 # RuboCop only installs on newer Rubies (see Gemfile); the default task degrades
 # to test-only where it is absent.
 begin

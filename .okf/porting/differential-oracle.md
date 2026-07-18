@@ -3,7 +3,7 @@ type: Playbook
 title: Differential Oracle
 description: How the original JavaScript MiniSearch generates the expected outputs the Ruby test suite replays and asserts against, to prove bit-for-bit fidelity.
 tags: [js-port, fidelity, testing]
-timestamp: 2026-07-17
+timestamp: 2026-07-18
 ---
 
 # Overview
@@ -27,7 +27,9 @@ Scores are asserted equal within `FLOAT_TOLERANCE = 1e-9`. The full suite runs
 **150,409 assertions** across **169 runs** green, including on Ruby 2.4. A separate
 test asserts the serialized index is *byte-identical* to the JS output — which is
 what certifies the [radix tree's](/architecture/radix-tree-index.md) iteration
-order.
+order. Where this oracle replays JS output in one direction, the
+[interchange suite](/porting/interchange-suite.md) closes the loop, loading each
+runtime's serialized index into the other.
 
 Because green here means byte-identical, this suite doubles as the hard correctness
 gate for performance work: it is Gate 0 of the

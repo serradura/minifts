@@ -3,7 +3,7 @@ type: Reference
 title: JavaScript Fidelity Gotchas
 description: The catalogue of JavaScript language-semantics traps the Ruby port had to reproduce exactly, each with the failure it caused if missed.
 tags: [js-port, fidelity, ruby-floor]
-timestamp: 2026-07-17
+timestamp: 2026-07-18
 ---
 
 # Overview
@@ -12,7 +12,8 @@ Because the port is [bit-for-bit faithful](/decisions/bit-for-bit-fidelity.md),
 every place where JavaScript semantics differ from Ruby's is a place the Ruby code
 must *imitate JS*, not do the idiomatic Ruby thing. None of these is derivable from
 reading either source in isolation — each surfaced as a
-[differential](/porting/differential-oracle.md) mismatch or an outright crash. This
+[differential](/porting/differential-oracle.md) mismatch, a byte-level
+[interchange](/porting/interchange-suite.md) diff, or an outright crash. This
 is the table to consult before "cleaning up" any of the code it points at.
 
 # The catalogue
@@ -26,6 +27,13 @@ is the table to consult before "cleaning up" any of the code it points at.
 | Unicode case | `toLowerCase` does full case folding | rely on Ruby 2.4+ full `String#downcase` (added in 2.4) |
 | Mutate-in-loop | JS iterates a snapshot in these spots | iterate `.keys.each` (a snapshot), never the live hash |
 | Fuzzy matrix bounds | out-of-range reads yield `undefined`; comparisons are false | explicit `nil` guards (see below) |
+| Number spelling | `JSON.stringify(4.0)` → `"4"` (no int/float type) | render whole-valued `averageFieldLength` as integers in `to_json` |
+| Object key order | objects iterate integer-like keys in ascending numeric order | sort each term's field ids ascending in `as_plain_object` |
+
+The last two are serialization-only: they never change search results, so the
+[differential oracle](/porting/differential-oracle.md)'s *parsed* golden
+comparison stayed green through both — only the byte-level
+[interchange suite](/porting/interchange-suite.md) caught them.
 
 # The two that bite hardest
 
@@ -53,6 +61,6 @@ port must handle deliberately.
 
 # Citations
 
-[1] `lib/minisearch.rb` — `DEFAULT_TOKENIZE`, `truthy?`, `sort_by_score`.
+[1] `lib/minisearch.rb` — `DEFAULT_TOKENIZE`, `truthy?`, `sort_by_score`, `to_json` / `as_plain_object` (`whole_float_as_integer`, field-id sort).
 [2] `lib/minisearch/searchable_map.rb` — `fuzzy_recurse` nil-guards.
 [3] Reference implementation: `tmp/minisearch/src/` (`MiniSearch.ts`, `SearchableMap/`).

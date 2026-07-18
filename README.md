@@ -67,6 +67,9 @@ ms.search("zen", boost: { "title" => 2 })               # weight matches in :tit
 ms.search("art", fields: ["title"])                     # restrict to certain fields
 ms.search("art", filter: ->(r) { r["category"] == "fiction" })
 ms.search("art", boost_document: ->(id, term, stored) { stored["featured"] ? 2 : 1 })
+ms.search("zen art", boost_term: ->(term, i, terms) { term == "zen" ? 2 : 1 })  # weight some query terms higher
+ms.search("moto", prefix: true, weights: { prefix: 0.1 })   # down-weight non-exact (prefix/fuzzy) matches
+ms.search("zen", bm25: { k: 1.2, b: 0.7, d: 0.5 })          # tune BM25+ scoring (defaults shown)
 ms.search(Minisearch::WILDCARD)                          # match every document
 ```
 
@@ -81,8 +84,13 @@ ms.search(
 
 Supported search options: `:fields`, `:filter`, `:boost`, `:boost_term`,
 `:weights`, `:boost_document`, `:prefix`, `:fuzzy`, `:max_fuzzy`,
-`:combine_with`, `:tokenize`, `:process_term`, `:bm25`. Defaults can be set once
-via the constructor's `:search_options`.
+`:combine_with`, `:tokenize`, `:process_term`, `:bm25`.
+
+`:weights` scales non-exact matches — defaults `{ fuzzy: 0.45, prefix: 0.375 }`,
+so a fuzzy or prefix hit counts for less than an exact one. `:boost_term` takes a
+callable returning a per-*query-term* multiplier (default `1`). `:bm25` tunes the
+BM25+ parameters `k`, `b`, and `d` (defaults `{ k: 1.2, b: 0.7, d: 0.5 }`).
+Defaults can be set once via the constructor's `:search_options`.
 
 ## Auto-suggestions
 
@@ -127,12 +135,17 @@ Minisearch.new(
   stringify_field: ->(value, field) { value.to_s },
   tokenize: ->(text, field = nil) { text.split(/\s+/) },
   process_term: ->(term, field = nil) { term.downcase },  # normalize/stem; return nil to drop
-  search_options: { prefix: true },   # default options for every search
+  search_options: { prefix: true },      # default options for every search
+  auto_suggest_options: { fuzzy: 0.2 },  # default options for every auto_suggest
+  logger: ->(level, msg, code) { warn("#{level}: #{msg}") },  # warning sink; default logs to stderr
   auto_vacuum: true
 )
 ```
 
 Callables are anything responding to `call` (lambdas, procs, method objects).
+`Minisearch.get_default(:tokenize)` returns the built-in default for any
+constructor option (`:tokenize`, `:process_term`, `:extract_field`, ...), handy
+when you want to wrap the default rather than replace it.
 
 ### Documents with symbol keys
 
@@ -168,6 +181,11 @@ File.write("index.json", json)
 ms = Minisearch.load_json(File.read("index.json"), fields: %w[title text], store_fields: %w[title])
 ```
 
+If you already hold the index as a Ruby Hash (string keys) rather than a JSON
+string, use `ms.as_plain_object` to get one and `Minisearch.load(hash, **opts)`
+to load it back — `to_json`/`load_json` are exactly those two with JSON in
+between.
+
 Because the format is identical, an index built in Ruby can be loaded by
 JavaScript MiniSearch in the browser (and vice-versa) — index server-side, search
 client-side.
@@ -202,6 +220,25 @@ documents rather than the total. Indicative figures from
 On the same corpus, exact search is ~6× faster than a naive "scan every
 document" approach — a gap that widens as the corpus grows.
 
+### Optimization
+
+The implementation was profiled and tuned against a real-world corpus. Relative
+to an early baseline, on the same workload with output verified byte-identical
+(2,627 result rows, scores matched to 17 significant figures):
+
+| metric          | change vs. baseline        |
+| --------------- | -------------------------- |
+| indexing memory | **4.3× lighter** (−76.6%)  |
+| search memory   | **1.8× lighter** (−44.7%)  |
+| indexing speed  | +37% (1.37×)               |
+| search speed    | +15% (1.15×)               |
+
+Memory (allocated bytes) is deterministic; the throughput figures are wall-clock
+medians and directional. The memory wins dominate because the hot path was
+allocation-bound: indexing 500 documents churned ~11.5M objects and now churns
+~2.4M — far lower GC pressure and peak memory, which is what matters most for an
+in-memory index at scale.
+
 ## Fidelity
 
 This port is validated against the original JavaScript MiniSearch, not just by
@@ -213,8 +250,13 @@ hand-written expectations:
   randomly generated queries with random options, run through the real JS library
   and replayed in Ruby — ~150,000 assertions, scores matched to full double
   precision.
-- **Byte-identical serialization**: the radix-tree iteration order matches JS, so
-  serialized indexes are interchangeable.
+- **Byte-identical serialization**: a Ruby-serialized index is byte-for-byte
+  identical to the JavaScript library's — index in one, search in the other. The
+  lone exception is a corpus containing astral-plane characters (above U+FFFF,
+  e.g. most emoji), whose radix-tree terms sort by UTF-8 code point here vs
+  UTF-16 code unit in JS; such indexes still load and search identically, only
+  their serialized byte order differs. Interchange is verified in both directions
+  across 32 scenarios by `rake compat` (see `compatibility/`).
 
 The whole suite runs on **Ruby 2.4** (verified in a `ruby:2.4` container).
 

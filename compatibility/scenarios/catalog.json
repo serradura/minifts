@@ -1,0 +1,275 @@
+[
+  {
+    "name": "minimal_single_field",
+    "description": "One indexed field, nothing stored.",
+    "options": { "fields": ["body"] },
+    "documents": [
+      { "id": 1, "body": "the quick brown fox" },
+      { "id": 2, "body": "a lazy brown dog" },
+      { "id": 3, "body": "quick foxes leap" }
+    ],
+    "queries": ["quick", "brown", "fox"]
+  },
+  {
+    "name": "basic_multi_field",
+    "description": "Two indexed fields, a couple stored. The canonical README example.",
+    "options": { "fields": ["title", "text"], "storeFields": ["title", "category"] },
+    "documents": [
+      { "id": 1, "title": "Moby Dick", "text": "Call me Ishmael", "category": "fiction" },
+      { "id": 2, "title": "Zen and the Art of Motorcycle Maintenance", "text": "I can see by my watch", "category": "fiction" },
+      { "id": 3, "title": "Neuromancer", "text": "The sky above the port was", "category": "sci-fi" },
+      { "id": 4, "title": "Zen and the Art of Archery", "text": "At first sight it must seem", "category": "non-fiction" }
+    ],
+    "queries": ["zen", { "q": "zen art motorcycle", "opts": {} }, "archery"]
+  },
+  {
+    "name": "all_fields_stored",
+    "description": "Every field is both indexed and stored.",
+    "options": { "fields": ["title", "author"], "storeFields": ["title", "author", "year"] },
+    "documents": [
+      { "id": 1, "title": "Dune", "author": "Frank Herbert", "year": 1965 },
+      { "id": 2, "title": "Hyperion", "author": "Dan Simmons", "year": 1989 }
+    ],
+    "queries": ["dune", "herbert", "hyperion"]
+  },
+  {
+    "name": "no_store_fields",
+    "description": "Indexed fields only; results carry no stored payload.",
+    "options": { "fields": ["title", "text"] },
+    "documents": [
+      { "id": 10, "title": "alpha beta", "text": "gamma delta" },
+      { "id": 11, "title": "beta gamma", "text": "delta epsilon" }
+    ],
+    "queries": ["beta", "delta", { "q": "gamma", "opts": {} }]
+  },
+  {
+    "name": "custom_id_field",
+    "description": "Documents keyed by a non-default id field (uri).",
+    "options": { "fields": ["title"], "idField": "uri", "storeFields": ["title"] },
+    "documents": [
+      { "uri": "/posts/hello", "title": "Hello world" },
+      { "uri": "/posts/search", "title": "Full text search" }
+    ],
+    "queries": ["hello", "search", "world"]
+  },
+  {
+    "name": "string_ids",
+    "description": "String document ids.",
+    "options": { "fields": ["text"], "storeFields": ["text"] },
+    "documents": [
+      { "id": "doc-a", "text": "ruby and javascript interop" },
+      { "id": "doc-b", "text": "javascript on the frontend" }
+    ],
+    "queries": ["javascript", "ruby", "frontend"]
+  },
+  {
+    "name": "large_numeric_ids",
+    "description": "Large / sparse integer ids.",
+    "options": { "fields": ["text"] },
+    "documents": [
+      { "id": 1000000001, "text": "index materialized once" },
+      { "id": 2147483647, "text": "served on both sides" }
+    ],
+    "queries": ["materialized", "served", "index"]
+  },
+  {
+    "name": "many_fields",
+    "description": "Six indexed fields.",
+    "options": { "fields": ["a", "b", "c", "d", "e", "f"], "storeFields": ["a"] },
+    "documents": [
+      { "id": 1, "a": "apple", "b": "banana", "c": "cherry", "d": "date", "e": "elder", "f": "fig" },
+      { "id": 2, "a": "avocado", "b": "blueberry", "c": "cranberry", "d": "durian", "e": "elderberry", "f": "feijoa" }
+    ],
+    "queries": ["apple", "elderberry", { "q": "cherry", "opts": {} }]
+  },
+  {
+    "name": "repeated_terms",
+    "description": "High term frequency within a field, stressing tf and average length.",
+    "options": { "fields": ["text"], "storeFields": ["text"] },
+    "documents": [
+      { "id": 1, "text": "buffalo buffalo buffalo buffalo buffalo bison" },
+      { "id": 2, "text": "buffalo bison bison" }
+    ],
+    "queries": ["buffalo", "bison"]
+  },
+  {
+    "name": "duplicate_docs",
+    "description": "Distinct ids with identical content, exercising score ties and stable order.",
+    "options": { "fields": ["text"], "storeFields": ["text"] },
+    "documents": [
+      { "id": 1, "text": "identical content here" },
+      { "id": 2, "text": "identical content here" },
+      { "id": 3, "text": "identical content here" }
+    ],
+    "queries": ["identical", "content"]
+  },
+  {
+    "name": "single_document",
+    "description": "A corpus of exactly one document.",
+    "options": { "fields": ["title", "text"], "storeFields": ["title"] },
+    "documents": [
+      { "id": 1, "title": "lonely", "text": "the only document in the index" }
+    ],
+    "queries": ["lonely", "document", "only"]
+  },
+  {
+    "name": "long_text",
+    "description": "A long field value producing many terms.",
+    "options": { "fields": ["text"] },
+    "documents": [
+      { "id": 1, "text": "lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation" },
+      { "id": 2, "text": "ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur" }
+    ],
+    "queries": ["dolor", "ut", { "q": "dolore magna", "opts": {} }]
+  },
+  {
+    "name": "numbers_as_terms",
+    "description": "Numeric tokens and version strings.",
+    "options": { "fields": ["text"], "storeFields": ["text"] },
+    "documents": [
+      { "id": 1, "text": "released in 2024 version 3 build 1795" },
+      { "id": 2, "text": "version 2 shipped 2023" }
+    ],
+    "queries": ["2024", "version", "3"]
+  },
+  {
+    "name": "shared_prefixes",
+    "description": "Terms with deep shared prefixes, stressing radix-tree branching.",
+    "options": { "fields": ["text"], "storeFields": ["text"] },
+    "documents": [
+      { "id": 1, "text": "motor motorcycle motorbike moto motorway motorcycles" },
+      { "id": 2, "text": "mot mo m motorist motoring" }
+    ],
+    "queries": ["motor", { "q": "moto", "opts": { "prefix": true } }, "motorcycle"]
+  },
+  {
+    "name": "unicode_accents",
+    "description": "Accented Latin. Case folding and NFC normalization must agree.",
+    "options": { "fields": ["text"], "storeFields": ["text"] },
+    "documents": [
+      { "id": 1, "text": "café Über naïve résumé cœur" },
+      { "id": 2, "text": "CAFÉ ÜBER angström garçon" }
+    ],
+    "queries": ["café", "über", { "q": "résumé", "opts": {} }]
+  },
+  {
+    "name": "cjk_text",
+    "description": "CJK (BMP) text; tokenization splits on Unicode punctuation/space.",
+    "options": { "fields": ["text"], "storeFields": ["text"] },
+    "documents": [
+      { "id": 1, "text": "東京 の 天気 は 晴れ です" },
+      { "id": 2, "text": "中文 搜索 引擎 测试 東京" }
+    ],
+    "queries": ["東京", "搜索", "天気"]
+  },
+  {
+    "name": "emoji_symbols",
+    "description": "Astral-plane characters (emoji). Byte order differs; search must not.",
+    "options": { "fields": ["text"], "storeFields": ["text"] },
+    "documents": [
+      { "id": 1, "text": "hello 🌍 world 🚀 launch 🎉 party" },
+      { "id": 2, "text": "fire 🔥 rocket 🚀 again" }
+    ],
+    "queries": ["🚀", "world", "🔥"]
+  },
+  {
+    "name": "prefix_search",
+    "description": "Prefix matching as a default search option and per query.",
+    "options": { "fields": ["title"], "storeFields": ["title"], "searchOptions": { "prefix": true } },
+    "documents": [
+      { "id": 1, "title": "motorcycle maintenance" },
+      { "id": 2, "title": "motorway network" },
+      { "id": 3, "title": "archery basics" }
+    ],
+    "queries": ["moto", "arch", { "q": "network", "opts": { "prefix": false } }]
+  },
+  {
+    "name": "fuzzy_search",
+    "description": "Fuzzy matching with an edit-distance ratio.",
+    "options": { "fields": ["title"], "storeFields": ["title"], "searchOptions": { "fuzzy": 0.3, "maxFuzzy": 4 } },
+    "documents": [
+      { "id": 1, "title": "ishmael" },
+      { "id": 2, "title": "neuromancer" },
+      { "id": 3, "title": "motorcycle" }
+    ],
+    "queries": ["ismael", "neromancer", { "q": "motorcicle", "opts": { "fuzzy": 0.2 } }]
+  },
+  {
+    "name": "bm25_tuned",
+    "description": "Non-default BM25+ parameters supplied at search time.",
+    "options": { "fields": ["text"], "storeFields": ["text"] },
+    "documents": [
+      { "id": 1, "text": "search relevance ranking search search" },
+      { "id": 2, "text": "ranking and scoring model" },
+      { "id": 3, "text": "search index structure" }
+    ],
+    "queries": [
+      { "q": "search ranking", "opts": { "bm25": { "k": 2.0, "b": 0.5, "d": 1.0 } } },
+      { "q": "search", "opts": { "bm25": { "k": 0.5, "b": 0.9, "d": 0.0 } } }
+    ]
+  },
+  {
+    "name": "field_boost_query",
+    "description": "Per-query field boosting.",
+    "options": { "fields": ["title", "text"], "storeFields": ["title"] },
+    "documents": [
+      { "id": 1, "title": "search", "text": "a document about indexing" },
+      { "id": 2, "title": "indexing", "text": "a document about search" }
+    ],
+    "queries": [
+      { "q": "search", "opts": { "boost": { "title": 3 } } },
+      { "q": "indexing", "opts": { "boost": { "text": 5 } } }
+    ]
+  },
+  {
+    "name": "combine_and_query",
+    "description": "Requiring all terms via combineWith AND.",
+    "options": { "fields": ["text"], "storeFields": ["text"] },
+    "documents": [
+      { "id": 1, "text": "zen and the art of archery" },
+      { "id": 2, "text": "zen and motorcycle maintenance" },
+      { "id": 3, "text": "the art of war" }
+    ],
+    "queries": [
+      { "q": "zen art", "opts": { "combineWith": "AND" } },
+      { "q": "zen art", "opts": { "combineWith": "OR" } }
+    ]
+  },
+  {
+    "name": "restrict_fields_query",
+    "description": "Restricting a search to a subset of fields.",
+    "options": { "fields": ["title", "text"], "storeFields": ["title"] },
+    "documents": [
+      { "id": 1, "title": "art", "text": "the science of war" },
+      { "id": 2, "title": "war", "text": "the art of it all" }
+    ],
+    "queries": [
+      { "q": "art", "opts": { "fields": ["title"] } },
+      { "q": "war", "opts": { "fields": ["text"] } }
+    ]
+  },
+  {
+    "name": "combination_tree",
+    "description": "A nested combination-tree query (AND of a term and an OR of terms).",
+    "options": { "fields": ["text"], "storeFields": ["text"] },
+    "documents": [
+      { "id": 1, "text": "zen archery" },
+      { "id": 2, "text": "zen motorcycle" },
+      { "id": 3, "text": "archery and motorcycle" }
+    ],
+    "queries": [
+      { "tree": { "combineWith": "AND", "queries": ["zen", { "combineWith": "OR", "queries": ["motorcycle", "archery"] }] } }
+    ]
+  },
+  {
+    "name": "wildcard_match",
+    "description": "The wildcard query, matching every document.",
+    "options": { "fields": ["title"], "storeFields": ["title", "category"] },
+    "documents": [
+      { "id": 1, "title": "one", "category": "a" },
+      { "id": 2, "title": "two", "category": "b" },
+      { "id": 3, "title": "three", "category": "a" }
+    ],
+    "queries": [{ "wildcard": true }]
+  }
+]

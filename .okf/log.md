@@ -1,5 +1,8 @@
 # Update Log
 
+## 2026-07-18
+* **Update**: Recorded the Ruby ⇄ JavaScript index-interchange work. Added a new [interchange-suite](/porting/interchange-suite.md) Reference — the bidirectional `rake compat` proof (32 scenarios against the real `minisearch@7.2.0`, 32/32 functional / 31/32 byte-identical), the two serializer gaps it surfaced, the astral-plane byte-order boundary, and the vacuum-before-materialize note. Catalogued the two new traps (whole-float number spelling, integer-key ordering) in [js-fidelity-gotchas](/porting/js-fidelity-gotchas.md); qualified the byte-identity claim with the astral exception and the bidirectional proof in [bit-for-bit-fidelity](/decisions/bit-for-bit-fidelity.md) and the iteration-order contract in [radix-tree-index](/architecture/radix-tree-index.md); cross-linked the [differential-oracle](/porting/differential-oracle.md). Note: the two serializer fixes and the `compatibility/` suite ship in this change; the fidelity claims now hold byte-for-byte for any corpus without astral-plane characters.
+
 ## 2026-07-17
 * **Creation**: Seeded the bundle documenting the non-obvious knowledge behind the Ruby port — the design decisions, the runtime architecture, the JavaScript-fidelity porting notes, and the floor-respecting toolchain — alongside the 0.1.0 initial release.
   * Decisions — [ruby-2.4-floor](/decisions/ruby-2.4-floor.md), [bit-for-bit-fidelity](/decisions/bit-for-bit-fidelity.md), [minisearch-role-in-okf](/decisions/minisearch-role-in-okf.md).

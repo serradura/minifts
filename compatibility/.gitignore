@@ -1,0 +1,5 @@
+node_modules/
+package-lock.json
+
+# Regenerated on every `rake compat` run (stages 1-2); reproducible, not source.
+fixtures/

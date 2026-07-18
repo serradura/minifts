@@ -405,7 +405,11 @@ class Minisearch
     index = []
     @index.each do |term, field_index|
       data = {}
-      field_index.each { |field_id, freqs| data[field_id] = freqs }
+      # JavaScript objects iterate integer-like keys in ascending numeric order,
+      # so JSON.stringify emits a term's field ids sorted; Ruby Hashes preserve
+      # insertion order (a term first seen in a higher field would otherwise
+      # serialize its field ids out of order). Sort to stay byte-identical.
+      field_index.keys.sort.each { |field_id| data[field_id] = field_index[field_id] }
       index.push([term, data])
     end
 
@@ -424,9 +428,13 @@ class Minisearch
   end
 
   # Serializes the index to a JSON string. Integer keys are rendered as strings,
-  # producing output interchangeable with the JavaScript library.
+  # and whole-valued averageFieldLength entries as integers, producing output
+  # byte-interchangeable with the JavaScript library (see
+  # {#whole_float_as_integer}).
   def to_json(*args)
-    as_plain_object.to_json(*args)
+    plain = as_plain_object
+    plain["averageFieldLength"] = plain["averageFieldLength"].map { |value| whole_float_as_integer(value) }
+    plain.to_json(*args)
   end
 
   # Deserializes a JSON index produced by {#to_json} (or by the JS library),
@@ -451,6 +459,17 @@ class Minisearch
   end
 
   private
+
+  # JavaScript's +JSON.stringify+ renders a whole-valued number without a
+  # decimal point (+4+), whereas Ruby renders a Float as +4.0+.
+  # averageFieldLength is the only engine-computed float in the serialized
+  # index, so we match JavaScript's spelling to keep a Ruby-serialized index
+  # byte-identical to a JavaScript one. The value is numerically unchanged, and
+  # reloading +4+ yields the same Integer that a JavaScript-produced index
+  # already does.
+  def whole_float_as_integer(value)
+    value.is_a?(Float) && value.finite? && value == value.to_i ? value.to_i : value
+  end
 
   def reset_index
     @index = SearchableMap.new

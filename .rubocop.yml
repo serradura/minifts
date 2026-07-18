@@ -4,6 +4,7 @@ AllCops:
   SuggestExtensions: false
   Exclude:
     - "benchmarks/**/*"
+    - "compatibility/**/*"
     - "tmp/**/*"
     - "vendor/**/*"
 

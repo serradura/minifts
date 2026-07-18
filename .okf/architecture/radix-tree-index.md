@@ -4,7 +4,7 @@ title: Radix-tree Index
 description: Minisearch::SearchableMap, a compressed prefix tree with Map semantics plus prefix and fuzzy lookup, whose iteration order is byte-compatible with the JS SearchableMap.
 resource: lib/minisearch/searchable_map.rb
 tags: [performance, fidelity]
-timestamp: 2026-07-17
+timestamp: 2026-07-18
 ---
 
 # Overview
@@ -29,7 +29,11 @@ divergence node and returns a *view* rooted there rather than copying entries.
   matches the JavaScript `SearchableMap`'s insertion-ordered `Map`. That equality
   is *why* serialized indexes are byte-interchangeable
   ([bit-for-bit-fidelity](/decisions/bit-for-bit-fidelity.md)); changing the
-  traversal would silently break interop.
+  traversal would silently break interop. The one place this equality breaks is
+  astral-plane characters (above U+FFFF): edges split on UTF-8 code points here
+  vs UTF-16 code units in JS, so those terms serialize in a different order — a
+  known boundary the [interchange suite](/porting/interchange-suite.md) maps,
+  harmless to loading and search.
 - **Fuzzy is a shared-matrix Levenshtein walk.** `fuzzy_get` runs a Levenshtein DP
   over the tree, reusing one edit-distance matrix across the recursion instead of
   recomputing per candidate. Its out-of-bounds handling is one of the subtler

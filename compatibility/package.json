@@ -1,0 +1,12 @@
+{
+  "name": "minisearch-compatibility",
+  "private": true,
+  "type": "module",
+  "description": "Cross-runtime interchange tests: Ruby Minisearch <-> JavaScript MiniSearch.",
+  "scripts": {
+    "check": "node bin/check_js.mjs"
+  },
+  "dependencies": {
+    "minisearch": "7.2.0"
+  }
+}
