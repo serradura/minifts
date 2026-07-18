@@ -1,14 +1,4 @@
-## [Unreleased]
-
-- `to_json` now renders whole-valued `averageFieldLength` entries as integers
-  (`4`, not `4.0`) and sorts each term's field ids ascending, matching
-  JavaScript's `JSON.stringify` output. A Ruby-serialized index is now
-  byte-identical to the JavaScript library's for any corpus without
-  astral-plane (above U+FFFF) characters. Loading is unaffected.
-- Added `compatibility/`, a bidirectional Ruby ⇄ JavaScript index interchange
-  suite (`rake compat`) covering 32 scenarios.
-
-## [0.1.0] - 2026-07-17
+## [1.0.0] - 2026-07-18
 
 - Initial release: a pure-Ruby port of the JavaScript
   [MiniSearch](https://github.com/lucaong/minisearch) full-text search engine.
@@ -21,8 +11,11 @@
 - Auto-suggestions (`auto_suggest`).
 - Incremental `add` / `remove` / `discard` / `replace`, with lazy index cleanup
   and synchronous (auto-)vacuuming.
-- JSON serialization interchangeable with the JavaScript library
-  (`to_json` / `load_json`).
+- Byte-identical JSON serialization with the JavaScript library (`to_json` /
+  `load_json`): a Ruby-serialized index loads and searches identically in
+  JavaScript, and vice versa, for any corpus without astral-plane (above
+  U+FFFF) characters. Verified bidirectionally against the real
+  `minisearch@7.2.0` across 32 scenarios (`rake compat`).
 - Runs on every Ruby since 2.4; no runtime dependencies.
 - Configurable `logger` for index-corruption warnings; setting `logger: nil`
   silences them without raising.
