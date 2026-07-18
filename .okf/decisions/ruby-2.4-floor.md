@@ -8,9 +8,9 @@ timestamp: 2026-07-17
 
 # Overview
 
-Minisearch sets `required_ruby_version = ">= 2.4.0"` and the entire codebase is
+MiniFTS sets `required_ruby_version = ">= 2.4.0"` and the entire codebase is
 written to that floor — no syntax or stdlib introduced after 2.4. The reason is
-inherited from [okf](/decisions/minisearch-role-in-okf.md): the gem should run on
+inherited from [okf](/decisions/minifts-role-in-okf.md): the gem should run on
 the Ruby an operating system *already ships*, not the Ruby a developer would
 prefer to install. 2.4 is the practical floor for "whatever is already there," it
 matches rack's own floor, and it keeps the dependency story light.
@@ -36,5 +36,5 @@ container.
 
 # Citations
 
-[1] `minisearch.gemspec` — `spec.required_ruby_version = ">= 2.4.0"`.
+[1] `minifts.gemspec` — `spec.required_ruby_version = ">= 2.4.0"`.
 [2] `.rubocop.yml` — `TargetRubyVersion: 2.4`.

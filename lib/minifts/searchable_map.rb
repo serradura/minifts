@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-class Minisearch
+class MiniFTS
   # A radix tree (compressed prefix tree) implementing a Map-like interface with
   # string keys, plus efficient prefix and fuzzy (Levenshtein) lookup. Used
-  # internally by {Minisearch} as the inverted index, but useful on its own.
+  # internally by {MiniFTS} as the inverted index, but useful on its own.
   #
   # This is a faithful port of MiniSearch's `SearchableMap`. The tree is a nested
   # Hash: every non-empty string key is an edge label pointing at a child Hash,

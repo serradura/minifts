@@ -10,7 +10,7 @@ class TestAdd < Minitest::Test
   # --- constructor -------------------------------------------------------
 
   def test_constructor_initializes_attributes
-    ms = Minisearch.new(fields: %w[title text])
+    ms = MiniFTS.new(fields: %w[title text])
     assert_equal 0, ms.document_count
     assert_equal 0, ms.term_count
     assert_nil ms.get_stored_fields(1)
@@ -19,7 +19,7 @@ class TestAdd < Minitest::Test
   # --- add ---------------------------------------------------------------
 
   def test_add_does_not_throw_if_a_field_is_missing
-    ms = Minisearch.new(fields: %w[title text])
+    ms = MiniFTS.new(fields: %w[title text])
     ms.add("id" => 1, "text" => "Nel mezzo del cammin di nostra vita")
     assert_equal 1, ms.document_count
   end
@@ -28,14 +28,14 @@ class TestAdd < Minitest::Test
     extract = lambda do |doc, field|
       field == "id" ? doc["id"]["value"] : doc[field]
     end
-    ms = Minisearch.new(fields: ["text"], extract_field: extract)
+    ms = MiniFTS.new(fields: ["text"], extract_field: extract)
     ms.add("id" => { "value" => 123 }, "text" => "Nel mezzo del cammin di nostra vita")
     assert_equal 123, ms.search("vita").first[:id]
   end
 
   def test_add_rejects_falsy_terms
     process = ->(term, _field = nil) { term == "foo" ? nil : term }
-    ms = Minisearch.new(fields: %w[title text], process_term: process)
+    ms = MiniFTS.new(fields: %w[title text], process_term: process)
     ms.add("id" => 123, "text" => "foo bar")
     assert_equal 1, ms.document_count
   end
@@ -50,7 +50,7 @@ class TestAdd < Minitest::Test
       seen << value
       value.split(/\W+/)
     end
-    ms = Minisearch.new(fields: %w[id isBlinky], tokenize: tokenize)
+    ms = MiniFTS.new(fields: %w[id isBlinky], tokenize: tokenize)
     ms.add("id" => 123, "isBlinky" => false)
     ms.add("id" => 321, "isBlinky" => true)
 
@@ -75,7 +75,7 @@ class TestAdd < Minitest::Test
         value.to_s
       end
     end
-    ms = Minisearch.new(fields: %w[id tags isBlinky], tokenize: tokenize, stringify_field: stringify)
+    ms = MiniFTS.new(fields: %w[id tags isBlinky], tokenize: tokenize, stringify_field: stringify)
     ms.add("id" => 123, "tags" => %w[foo bar], "isBlinky" => false)
     ms.add("id" => 321, "isBlinky" => true)
 
@@ -103,7 +103,7 @@ class TestAdd < Minitest::Test
       "author" => { "name" => "Dante Alighieri" },
       "category" => "poetry"
     }
-    ms = Minisearch.new(
+    ms = MiniFTS.new(
       fields: ["title", "author.name"],
       store_fields: ["category"],
       extract_field: extract,
@@ -126,7 +126,7 @@ class TestAdd < Minitest::Test
       calls << [value, field]
       value.split(/\W+/)
     end
-    ms = Minisearch.new(fields: %w[text title], tokenize: tokenize)
+    ms = MiniFTS.new(fields: %w[text title], tokenize: tokenize)
     ms.add("id" => 1, "title" => "Divina Commedia", "text" => "Nel mezzo del cammin")
 
     assert_includes calls, ["Nel mezzo del cammin", "text"]
@@ -139,7 +139,7 @@ class TestAdd < Minitest::Test
       calls << [term, field]
       term.downcase
     end
-    ms = Minisearch.new(fields: %w[text title], process_term: process)
+    ms = MiniFTS.new(fields: %w[text title], process_term: process)
     ms.add("id" => 1, "title" => "Divina Commedia", "text" => "Nel mezzo")
 
     %w[Nel mezzo].each { |term| assert_includes calls, [term, "text"] }
@@ -148,7 +148,7 @@ class TestAdd < Minitest::Test
 
   def test_process_term_can_expand_a_single_term_into_several_on_add
     process = ->(term, _field = nil) { term == "foobar" ? %w[foo bar] : term }
-    ms = Minisearch.new(fields: %w[title text], process_term: process)
+    ms = MiniFTS.new(fields: %w[title text], process_term: process)
     ms.add("id" => 123, "text" => "foobar")
     assert_equal 1, ms.search("bar").length
   end

@@ -9,7 +9,7 @@
 # options so the exact same scenario runs on both runtimes.
 
 $LOAD_PATH.unshift File.expand_path("../../../lib", __FILE__)
-require "minisearch"
+require "minifts"
 require "json"
 
 module Compat
@@ -101,7 +101,7 @@ module Compat
     return [spec, {}] if spec.is_a?(String)
 
     if spec.key?("wildcard")
-      [Minisearch::WILDCARD, map_search_options(spec["opts"])]
+      [MiniFTS::WILDCARD, map_search_options(spec["opts"])]
     elsif spec.key?("tree")
       [map_tree(spec["tree"]), map_search_options(spec["opts"])]
     else
@@ -119,7 +119,7 @@ module Compat
   # ---- build + run -------------------------------------------------------
 
   def build_index(options, documents, mutations = [])
-    ms = Minisearch.new(options)
+    ms = MiniFTS.new(options)
     ms.add_all(documents)
     mutations.each { |mutation| apply_mutation(ms, mutation) }
     ms

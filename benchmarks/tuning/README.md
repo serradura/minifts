@@ -1,6 +1,6 @@
 # Auto-tuning harness — the trusted evaluator
 
-This directory is the **frozen evaluator** for optimizing `minisearch`, modelled
+This directory is the **frozen evaluator** for optimizing `minifts`, modelled
 on [`karpathy/autoresearch`](https://github.com/karpathy/autoresearch): an agent
 proposes a change, a harness it cannot edit judges it, and the change is kept
 only if it is correct *and* faster/leaner. This is the `prepare.py` of that loop.
@@ -11,7 +11,7 @@ only if it is correct *and* faster/leaner. This is the `prepare.py` of that loop
 |------|------|------------------------------|
 | `benchmarks/harness.rb` | Runs gates + measures performance, emits a scorecard | **No** |
 | `benchmarks/tuning/corpus.rb` | Deterministic corpus + queries | **No** |
-| `lib/minisearch.rb`, `lib/minisearch/searchable_map.rb` | The code under optimization | **Yes** |
+| `lib/minifts.rb`, `lib/minifts/searchable_map.rb` | The code under optimization | **Yes** |
 
 If the loop could edit the harness or the corpus, it could "win" by changing the
 ruler instead of the code. Keep them frozen.
@@ -77,5 +77,5 @@ so `... --save card.json > card.json` stays clean.
 
 Overfitting guard: the synthetic corpus is fixed, so the loop can learn to game
 *it*. Periodically re-score against the real corpus
-(`benchmarks/okf_vs_minisearch.rb`) and hold out one corpus the loop never sees
+(`benchmarks/okf_vs_minifts.rb`) and hold out one corpus the loop never sees
 for a final acceptance check.

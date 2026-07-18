@@ -30,7 +30,7 @@ Compat.all_scenarios.each do |scenario|
   # artifact's behavior, not the live builder's — and never mutate the bytes we
   # hand to the other runtime.
   raw = ms.to_json
-  reloaded = Minisearch.load_json(raw, internal[:options])
+  reloaded = MiniFTS.load_json(raw, internal[:options])
   results = Compat.run_queries(reloaded, internal[:queries])
 
   dir = File.join(Compat::FIXTURES, name)

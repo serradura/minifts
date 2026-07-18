@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # =============================================================================
-# Frozen evaluator for auto-tuning minisearch.
+# Frozen evaluator for auto-tuning minifts.
 # =============================================================================
 # This is the "prepare.py" of the tuning loop (cf. karpathy/autoresearch): the
 # trusted harness the optimizing agent MUST NOT edit. It answers one question
@@ -39,7 +39,7 @@ require "stringio"
 require "open3"
 
 $LOAD_PATH.unshift(File.expand_path("../lib", __dir__))
-require "minisearch"
+require "minifts"
 require_relative "tuning/corpus"
 
 module Tuning
@@ -103,7 +103,7 @@ module Tuning
 
       scorecard = {
         "schema" => SCHEMA,
-        "minisearch_version" => Minisearch::VERSION,
+        "minifts_version" => MiniFTS::VERSION,
         "ruby_version" => RUBY_VERSION,
         "git" => git_info,
         "corpus" => { "docs" => @num_docs, "queries" => @num_queries,
@@ -322,7 +322,7 @@ module Tuning
     # --- helpers -------------------------------------------------------------
 
     def build_index(docs)
-      index = Minisearch.new(fields: INDEX_FIELDS, store_fields: STORE_FIELDS)
+      index = MiniFTS.new(fields: INDEX_FIELDS, store_fields: STORE_FIELDS)
       index.add_all(docs)
       index
     end

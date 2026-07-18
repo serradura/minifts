@@ -14,7 +14,7 @@ results* match in one direction (JS generates fixtures, Ruby replays them), this
 suite proves the *serialized index itself* interchanges in **both** directions —
 the "materialize once, serve both" use case behind
 [bit-for-bit fidelity](/decisions/bit-for-bit-fidelity.md) and
-[Minisearch's role in okf](/decisions/minisearch-role-in-okf.md): build the index
+[MiniFTS's role in okf](/decisions/minifts-role-in-okf.md): build the index
 in the Ruby backend, ship the JSON, load it in the JavaScript frontend (or the
 reverse). It runs 32 scenarios of escalating complexity through the Ruby port and
 the *real* `minisearch@7.2.0` npm package, via `rake compat` (kept out of `rake
@@ -60,5 +60,5 @@ fully equivalent.
 
 [1] `compatibility/` — `scenarios/` (catalog + custom twins), `bin/build_ruby.rb`,
     `bin/check_js.mjs`, `test/test_interchange.rb`; run with `rake compat`.
-[2] `lib/minisearch.rb` — `to_json` (whole-float and field-id-order normalization).
+[2] `lib/minifts.rb` — `to_json` (whole-float and field-id-order normalization).
 [3] `compatibility/README.md` — the invariants, boundaries, and scenario catalogue.

@@ -19,13 +19,13 @@ class TestRemove < Minitest::Test
   end
 
   def build(logger: @spy_logger)
-    ms = Minisearch.new(fields: %w[title text], logger: logger)
+    ms = MiniFTS.new(fields: %w[title text], logger: logger)
     ms.add_all(DOCS)
     ms
   end
 
   def changed_message(id, term, field)
-    "Minisearch: document with ID #{id} has changed before removal: term \"#{term}\" was " \
+    "MiniFTS: document with ID #{id} has changed before removal: term \"#{term}\" was " \
       "not present in field \"#{field}\". Removing a document after it has changed can corrupt the index!"
   end
 
@@ -78,7 +78,7 @@ class TestRemove < Minitest::Test
     extract = lambda do |doc, field|
       field.split(".").reduce(doc) { |acc, key| acc && acc[key] }
     end
-    ms = Minisearch.new(fields: ["text.value"], store_fields: ["id"], extract_field: extract)
+    ms = MiniFTS.new(fields: ["text.value"], store_fields: ["id"], extract_field: extract)
     document = { "id" => 123, "text" => { "value" => "Nel mezzo del cammin di nostra vita" } }
     ms.add(document)
     ms.remove(document)
@@ -93,8 +93,8 @@ class TestRemove < Minitest::Test
   end
 
   def test_throws_error_if_the_document_does_not_have_the_id_field_on_remove
-    ms = Minisearch.new(id_field: "foo", fields: %w[title text])
-    error = assert_raises(Minisearch::Error) { ms.remove("text" => "I do not have an ID") }
+    ms = MiniFTS.new(id_field: "foo", fields: %w[title text])
+    error = assert_raises(MiniFTS::Error) { ms.remove("text" => "I do not have an ID") }
     assert_match(/does not have ID field "foo"/, error.message)
   end
 
@@ -102,7 +102,7 @@ class TestRemove < Minitest::Test
     extract = lambda do |doc, field|
       field == "id" ? doc["id"]["value"] : doc[field]
     end
-    ms = Minisearch.new(fields: ["text"], extract_field: extract)
+    ms = MiniFTS.new(fields: ["text"], extract_field: extract)
     document = { "id" => { "value" => 123 }, "text" => "Nel mezzo del cammin di nostra vita" }
     ms.add(document)
     ms.remove(document)
@@ -119,7 +119,7 @@ class TestRemove < Minitest::Test
 
   def test_rejects_falsy_terms_on_remove
     process = ->(term, _field = nil) { term == "foo" ? nil : term }
-    ms = Minisearch.new(fields: %w[title text], process_term: process)
+    ms = MiniFTS.new(fields: %w[title text], process_term: process)
     document = { "id" => 123, "title" => "foo bar" }
     ms.add(document)
     ms.remove(document)
@@ -128,7 +128,7 @@ class TestRemove < Minitest::Test
 
   def test_process_term_can_expand_a_single_term_on_remove
     process = ->(term, _field = nil) { term == "foobar" ? %w[foo bar] : term }
-    ms = Minisearch.new(fields: %w[title text], process_term: process)
+    ms = MiniFTS.new(fields: %w[title text], process_term: process)
     document = { "id" => 123, "title" => "foobar" }
     ms.add(document)
     ms.remove(document)
@@ -158,7 +158,7 @@ class TestRemove < Minitest::Test
       { "id" => 3, "title" => "Vita Nova", "tags" => %w[dante], "author" => { "name" => "Dante Alighieri" },
         "available" => true }
     ]
-    ms = Minisearch.new(
+    ms = MiniFTS.new(
       fields: %w[title tags authorName available],
       extract_field: extract, stringify_field: stringify, tokenize: tokenize, process_term: process,
       logger: @spy_logger
@@ -221,7 +221,7 @@ class TestRemove < Minitest::Test
 
   def test_remove_all_raises_on_nil_and_is_a_noop_for_empty
     ms = build
-    assert_raises(Minisearch::Error) { ms.remove_all(nil) }
+    assert_raises(MiniFTS::Error) { ms.remove_all(nil) }
     ms.remove_all([])
     assert_equal DOCS.length, ms.document_count
   end

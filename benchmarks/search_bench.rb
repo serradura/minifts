@@ -6,7 +6,7 @@
 #
 #   ruby -Ilib benchmarks/search_bench.rb [num_docs] [num_queries]
 
-require "minisearch"
+require "minifts"
 require "benchmark"
 
 NUM_DOCS = (ARGV[0] || 5_000).to_i
@@ -45,10 +45,10 @@ queries = Array.new(NUM_QUERIES) do
   Array.new(1 + (prng.call * 2).floor) { zipf.call }.join(" ")
 end
 
-puts "minisearch #{Minisearch::VERSION} — Ruby #{RUBY_VERSION}"
+puts "minifts #{MiniFTS::VERSION} — Ruby #{RUBY_VERSION}"
 puts "corpus: #{NUM_DOCS} documents, #{NUM_QUERIES} queries\n\n"
 
-ms = Minisearch.new(fields: %w[title body], store_fields: ["title"])
+ms = MiniFTS.new(fields: %w[title body], store_fields: ["title"])
 
 index_time = Benchmark.realtime { ms.add_all(docs) }
 puts format("index build:   %8.1f ms   (%.0f docs/sec, %d terms)",
@@ -82,6 +82,6 @@ mini_time  = Benchmark.realtime { subset.each { |q| ms.search(q) } }
 puts
 puts format("naive linear scan: %7.1f ms for %d queries (%.0f q/sec)",
             naive_time * 1000, subset.length, subset.length / naive_time)
-puts format("minisearch:        %7.1f ms for %d queries (%.0f q/sec)",
+puts format("minifts:        %7.1f ms for %d queries (%.0f q/sec)",
             mini_time * 1000, subset.length, subset.length / mini_time)
 puts format("speedup:           %7.1fx", naive_time / mini_time)

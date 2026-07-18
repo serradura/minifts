@@ -1,8 +1,8 @@
 {
-  "name": "minisearch-compatibility",
+  "name": "minifts-compatibility",
   "private": true,
   "type": "module",
-  "description": "Cross-runtime interchange tests: Ruby Minisearch <-> JavaScript MiniSearch.",
+  "description": "Cross-runtime interchange tests: Ruby MiniFTS <-> JavaScript MiniSearch.",
   "scripts": {
     "check": "node bin/check_js.mjs"
   },

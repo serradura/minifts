@@ -1,7 +1,7 @@
 ---
 type: Benchmark
 title: Allocation Tuning
-description: The frozen-evaluator campaign that cut minisearch's indexing and search allocation several-fold — lifting throughput with it — while keeping output byte-identical to JavaScript.
+description: The frozen-evaluator campaign that cut minifts's indexing and search allocation several-fold — lifting throughput with it — while keeping output byte-identical to JavaScript.
 resource: benchmarks/harness.rb
 tags: [performance, fidelity]
 timestamp: 2026-07-17
@@ -9,7 +9,7 @@ timestamp: 2026-07-17
 
 # Overview
 
-minisearch's hot paths were tuned in a deliberate campaign, not by guesswork: a run
+minifts's hot paths were tuned in a deliberate campaign, not by guesswork: a run
 of small allocation-cutting changes to the
 [search engine](/architecture/search-engine.md) and
 [radix tree](/architecture/radix-tree-index.md), each kept only if it left the output

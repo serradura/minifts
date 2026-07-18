@@ -9,7 +9,7 @@ require "test_helper"
 # test (reimplemented deterministically with a seeded PRNG, since Ruby has no
 # fast-check).
 class TestSearchableMapParity < Minitest::Test
-  Map = Minisearch::SearchableMap
+  Map = MiniFTS::SearchableMap
 
   STRINGS = %w[bin border acqua aqua poisson parachute parapendio acquamarina
                summertime summer join mediterraneo perciò borderline bo].freeze
@@ -114,7 +114,7 @@ class TestSearchableMapParity < Minitest::Test
   end
 
   def test_update_raises_if_the_given_key_is_not_a_string
-    assert_raises(Minisearch::Error) { Map.new.update(123) { |_v| 1 } }
+    assert_raises(MiniFTS::Error) { Map.new.update(123) { |_v| 1 } }
   end
 
   # --- atPrefix ----------------------------------------------------------
@@ -129,7 +129,7 @@ class TestSearchableMapParity < Minitest::Test
     assert_equal STRINGS.select { |s| s.start_with?("summer") }.sort, summer.keys.sort
 
     assert_equal [], map.at_prefix("xyz").keys
-    assert_raises(Minisearch::Error) { sum.at_prefix("xyz") }
+    assert_raises(MiniFTS::Error) { sum.at_prefix("xyz") }
   end
 
   def test_at_prefix_correctly_computes_the_size

@@ -24,7 +24,7 @@ class TestTokenization < Minitest::Test
             'in the machinery?"'
 
   def test_splits_on_non_alphanumeric_taking_diacritics_into_account
-    ms = Minisearch.new(fields: ["text"])
+    ms = MiniFTS.new(fields: ["text"])
     ms.add_all([{ "id" => 1, "text" => LEOPARDI }, { "id" => 2, "text" => FEYNMAN }])
 
     assert_operator ms.search("perché").length, :>, 0
@@ -42,7 +42,7 @@ class TestTokenization < Minitest::Test
       { "id" => 4, "title" => "سمت  الرأس" },
       { "id" => 5, "title" => "123 45" }
     ]
-    ms = Minisearch.new(fields: ["title"])
+    ms = MiniFTS.new(fields: ["title"])
     ms.add_all(documents)
 
     assert_equal([1], ms.search("софия").map { |r| r[:id] })
@@ -53,7 +53,7 @@ class TestTokenization < Minitest::Test
   end
 
   def test_splits_on_multiple_contiguous_spaces_or_punctuation_characters
-    tokenize = Minisearch.get_default("tokenize")
+    tokenize = MiniFTS.get_default("tokenize")
     assert_equal %w[a b c d], tokenize.call("a  b...c ? d")
   end
 end

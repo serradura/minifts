@@ -1,15 +1,15 @@
 ---
 type: Component
 title: Search Engine
-description: The Minisearch class — the query-combination search pipeline and the lazy discard/vacuum document lifecycle behind the API.
-resource: lib/minisearch.rb
+description: The MiniFTS class — the query-combination search pipeline and the lazy discard/vacuum document lifecycle behind the API.
+resource: lib/minifts.rb
 tags: [performance]
 timestamp: 2026-07-17
 ---
 
 # Overview
 
-`Minisearch` (in `lib/minisearch.rb`) is the engine. It owns the forward maps
+`MiniFTS` (in `lib/minifts.rb`) is the engine. It owns the forward maps
 (document → stored fields, per-field lengths, averages) and delegates the inverted
 index to a [radix tree](/architecture/radix-tree-index.md) per field. The API is
 in the README; what follows is the design that isn't visible there.
@@ -24,7 +24,7 @@ combine terms with `OR` / `AND` / `AND_NOT` → stable sort by descending score.
 Queries can also be combination *trees*, recursed the same way. Cost scales with
 the number of *matching* documents, not the corpus size — the reason the engine
 stays fast as the corpus grows, and why it
-[outruns a linear scan by ~50×](/benchmarks/okf-vs-minisearch.md) in practice.
+[outruns a linear scan by ~50×](/benchmarks/okf-vs-minifts.md) in practice.
 
 The per-document record accumulated as that pipeline runs — running score, matched
 query terms, per-term field hits — is carried as a **positional Array**
@@ -51,5 +51,5 @@ Ruby has no UI main thread to protect, so the async / batched variants are dropp
 
 # Citations
 
-[1] `lib/minisearch.rb` — `dirt_factor` (`@dirt_count.fdiv(1 + @document_count + @dirt_count)`), `calc_bm25_score`, `sort_by_score`.
+[1] `lib/minifts.rb` — `dirt_factor` (`@dirt_count.fdiv(1 + @document_count + @dirt_count)`), `calc_bm25_score`, `sort_by_score`.
 [2] `README.md` §"Adding, removing, and updating documents".

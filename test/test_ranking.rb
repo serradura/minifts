@@ -12,13 +12,13 @@ class TestRanking < Minitest::Test
   DATA = JSON.parse(File.read(File.join(__dir__, "ranking.json"))).freeze
 
   def movie_index
-    ms = Minisearch.new(fields: %w[title description], store_fields: ["title"])
+    ms = MiniFTS.new(fields: %w[title description], store_fields: ["title"])
     ms.add_all(DATA["movies"])
     ms
   end
 
   def song_index
-    ms = Minisearch.new(fields: %w[song artist], store_fields: ["song"])
+    ms = MiniFTS.new(fields: %w[song artist], store_fields: ["song"])
     ms.add_all(DATA["songs"])
     ms
   end

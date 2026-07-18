@@ -10,7 +10,7 @@ class TestMutations < Minitest::Test
   # --- discard -----------------------------------------------------------
 
   def test_discard_allows_adding_a_new_version_afterwards
-    ms = Minisearch.new(fields: ["text"], store_fields: ["text"])
+    ms = MiniFTS.new(fields: ["text"], store_fields: ["text"])
     ms.add_all([{ "id" => 1, "text" => "Some interesting stuff" },
                 { "id" => 2, "text" => "Some more interesting stuff" }])
 
@@ -29,9 +29,9 @@ class TestMutations < Minitest::Test
   end
 
   def test_discard_leaves_index_in_same_state_as_removal_after_search
-    ms = Minisearch.new(fields: ["text"], store_fields: ["text"])
+    ms = MiniFTS.new(fields: ["text"], store_fields: ["text"])
     ms.add("id" => 1, "text" => "Some stuff")
-    clone = Minisearch.load_json(ms.to_json, fields: ["text"], store_fields: ["text"])
+    clone = MiniFTS.load_json(ms.to_json, fields: ["text"], store_fields: ["text"])
 
     ms.discard(1)
     clone.remove("id" => 1, "text" => "Some stuff")
@@ -44,9 +44,9 @@ class TestMutations < Minitest::Test
   end
 
   def test_discard_triggers_auto_vacuum_when_the_threshold_is_met
-    ms = Minisearch.new(fields: ["text"],
-                        auto_vacuum: { min_dirt_count: 2, min_dirt_factor: 0, batch_size: 1,
-                                       batch_wait: 50 })
+    ms = MiniFTS.new(fields: ["text"],
+                     auto_vacuum: { min_dirt_count: 2, min_dirt_factor: 0, batch_size: 1,
+                                    batch_wait: 50 })
     ms.add_all([
                  { "id" => 1, "text" => "Some stuff" },
                  { "id" => 2, "text" => "Some additional stuff" },
@@ -61,7 +61,7 @@ class TestMutations < Minitest::Test
   end
 
   def test_discard_does_not_trigger_auto_vacuum_if_disabled
-    ms = Minisearch.new(fields: ["text"], auto_vacuum: false)
+    ms = MiniFTS.new(fields: ["text"], auto_vacuum: false)
     ms.add_all([
                  { "id" => 1, "text" => "Some stuff" },
                  { "id" => 2, "text" => "Some additional stuff" },
@@ -75,9 +75,9 @@ class TestMutations < Minitest::Test
   # --- discardAll --------------------------------------------------------
 
   def test_discard_all_triggers_at_most_a_single_auto_vacuum_at_the_end
-    ms = Minisearch.new(fields: ["text"],
-                        auto_vacuum: { min_dirt_count: 3, min_dirt_factor: 0, batch_size: 1,
-                                       batch_wait: 10 })
+    ms = MiniFTS.new(fields: ["text"],
+                     auto_vacuum: { min_dirt_count: 3, min_dirt_factor: 0, batch_size: 1,
+                                    batch_wait: 10 })
     documents = (1..10).map { |i| { "id" => i, "text" => "Document #{i}" } }
     ms.add_all(documents)
 
@@ -89,12 +89,12 @@ class TestMutations < Minitest::Test
   end
 
   def test_discard_all_does_not_change_auto_vacuum_settings_on_error
-    ms = Minisearch.new(fields: ["text"],
-                        auto_vacuum: { min_dirt_count: 1, min_dirt_factor: 0, batch_size: 1,
-                                       batch_wait: 10 })
+    ms = MiniFTS.new(fields: ["text"],
+                     auto_vacuum: { min_dirt_count: 1, min_dirt_factor: 0, batch_size: 1,
+                                    batch_wait: 10 })
     ms.add("id" => 1, "text" => "Some stuff")
 
-    assert_raises(Minisearch::Error) { ms.discard_all([3]) }
+    assert_raises(MiniFTS::Error) { ms.discard_all([3]) }
     assert_equal 0, ms.dirt_count
 
     # If the ensure clause had not restored auto_vacuum, this would leave dirt
@@ -107,15 +107,15 @@ class TestMutations < Minitest::Test
   # --- replace -----------------------------------------------------------
 
   def test_replace_raises_if_document_does_not_exist
-    ms = Minisearch.new(fields: ["text"])
-    error = assert_raises(Minisearch::Error) { ms.replace("id" => 1, "text" => "Some stuff") }
+    ms = MiniFTS.new(fields: ["text"])
+    error = assert_raises(MiniFTS::Error) { ms.replace("id" => 1, "text" => "Some stuff") }
     assert_match(/cannot discard document with ID 1/, error.message)
   end
 
   # --- has / getStoredFields ---------------------------------------------
 
   def test_has_works_with_custom_id_fields_after_remove_and_discard
-    ms = Minisearch.new(fields: %w[title text], id_field: "uid")
+    ms = MiniFTS.new(fields: %w[title text], id_field: "uid")
     ms.add_all([
                  { "uid" => 1, "title" => "Divina Commedia", "text" => "Nel mezzo del cammin di nostra vita" },
                  { "uid" => 2, "title" => "I Promessi Sposi", "text" => "Quel ramo del lago di Como" }
@@ -132,7 +132,7 @@ class TestMutations < Minitest::Test
   end
 
   def test_get_stored_fields_is_nil_after_discard
-    ms = Minisearch.new(fields: %w[title text], store_fields: %w[title text])
+    ms = MiniFTS.new(fields: %w[title text], store_fields: %w[title text])
     ms.add_all([
                  { "id" => 1, "title" => "Divina Commedia", "text" => "Nel mezzo del cammin di nostra vita" },
                  { "id" => 2, "title" => "I Promessi Sposi", "text" => "Quel ramo del lago di Como" }

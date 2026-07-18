@@ -17,7 +17,7 @@ class TestSearchOptions < Minitest::Test
   ].freeze
 
   def build
-    ms = Minisearch.new(fields: %w[title text], store_fields: %w[lang category])
+    ms = MiniFTS.new(fields: %w[title text], store_fields: %w[lang category])
     ms.add_all(DOCUMENTS)
     ms
   end
@@ -37,7 +37,7 @@ class TestSearchOptions < Minitest::Test
   end
 
   def test_assigns_weight_lower_than_exact_to_a_prefix_and_fuzzy_match
-    ms = Minisearch.new(fields: ["text"])
+    ms = MiniFTS.new(fields: ["text"])
     ms.add_all([
                  { "id" => 1, "text" => "Poi che la gente poverella crebbe" },
                  { "id" => 2, "text" => "Deus, venerunt gentes" }
@@ -103,7 +103,7 @@ class TestSearchOptions < Minitest::Test
   end
 
   def test_allows_a_default_filter_upon_instantiation
-    ms = Minisearch.new(
+    ms = MiniFTS.new(
       fields: %w[title text],
       store_fields: ["category"],
       search_options: { filter: ->(r) { r["category"] == "poetry" } }
@@ -119,9 +119,9 @@ class TestSearchOptions < Minitest::Test
       { "id" => 1, "text" => "something very very very cool" },
       { "id" => 2, "text" => "something cool" }
     ]
-    with_default = Minisearch.new(fields: ["text"], search_options: { bm25: { k: 1, b: 0.7, d: 0.5 } })
+    with_default = MiniFTS.new(fields: ["text"], search_options: { bm25: { k: 1, b: 0.7, d: 0.5 } })
     with_default.add_all(docs)
-    per_call = Minisearch.new(fields: ["text"])
+    per_call = MiniFTS.new(fields: ["text"])
     per_call.add_all(docs)
 
     assert_in_delta per_call.search("very", bm25: { k: 1, b: 0.7, d: 0.5 }).first[:score],
@@ -129,7 +129,7 @@ class TestSearchOptions < Minitest::Test
   end
 
   def test_wildcard_matches_all_including_null_field_and_star_is_a_normal_term
-    ms = Minisearch.new(fields: ["text"], store_fields: ["cool"])
+    ms = MiniFTS.new(fields: ["text"], store_fields: ["cool"])
     ms.add_all([
                  { "id" => 1, "text" => "something cool", "cool" => true },
                  { "id" => 2, "text" => "something else", "cool" => false },
@@ -138,9 +138,9 @@ class TestSearchOptions < Minitest::Test
 
     assert_equal [], ms.search("*")       # "*" is just a normal term
     assert_equal [], ms.search("")        # empty string is a normal query
-    assert_equal([1, 2, 3], ms.search(Minisearch::WILDCARD).map { |r| r[:id] })
+    assert_equal([1, 2, 3], ms.search(MiniFTS::WILDCARD).map { |r| r[:id] })
 
-    results = ms.search(Minisearch::WILDCARD, filter: ->(x) { x["cool"] }, boost_document: ->(id, *_) { id })
+    results = ms.search(MiniFTS::WILDCARD, filter: ->(x) { x["cool"] }, boost_document: ->(id, *_) { id })
     assert_equal([3, 1], results.map { |r| r[:id] })
   end
 
@@ -148,7 +148,7 @@ class TestSearchOptions < Minitest::Test
   # properties of object" — trivially safe in Ruby (plain Hash), ported for
   # regression parity.
   def test_meaningful_score_for_fields_named_like_object_defaults
-    ms = Minisearch.new(fields: ["constructor"])
+    ms = MiniFTS.new(fields: ["constructor"])
     ms.add("id" => 1, "constructor" => "something")
     ms.add("id" => 2, "constructor" => "something else")
     results = ms.search("something")

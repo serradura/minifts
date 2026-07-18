@@ -5,9 +5,9 @@ require "test_helper"
 # Unit tests for the public API, ergonomics, and error handling that don't need
 # a JavaScript reference (fidelity is covered by test_golden / test_fuzz /
 # test_lifecycle).
-class TestMinisearch < Minitest::Test
+class TestMiniFTS < Minitest::Test
   def sample
-    ms = Minisearch.new(fields: %w[title text], store_fields: %w[title category])
+    ms = MiniFTS.new(fields: %w[title text], store_fields: %w[title category])
     ms.add_all([
                  { "id" => 1, "title" => "Moby Dick", "text" => "Call me Ishmael", "category" => "fiction" },
                  { "id" => 2, "title" => "Neuromancer", "text" => "The sky above the port", "category" => "sci-fi" }
@@ -16,11 +16,11 @@ class TestMinisearch < Minitest::Test
   end
 
   def test_that_it_has_a_version_number
-    refute_nil Minisearch::VERSION
+    refute_nil MiniFTS::VERSION
   end
 
   def test_constructor_requires_fields
-    error = assert_raises(Minisearch::Error) { Minisearch.new }
+    error = assert_raises(MiniFTS::Error) { MiniFTS.new }
     assert_match(/option "fields" must be provided/, error.message)
   end
 
@@ -43,20 +43,20 @@ class TestMinisearch < Minitest::Test
 
   def test_duplicate_id_raises
     ms = sample
-    error = assert_raises(Minisearch::Error) do
+    error = assert_raises(MiniFTS::Error) do
       ms.add("id" => 1, "title" => "dupe", "text" => "again")
     end
     assert_match(/duplicate ID 1/, error.message)
   end
 
   def test_missing_id_field_raises
-    ms = Minisearch.new(fields: ["title"])
-    error = assert_raises(Minisearch::Error) { ms.add("title" => "no id here") }
+    ms = MiniFTS.new(fields: ["title"])
+    error = assert_raises(MiniFTS::Error) { ms.add("title" => "no id here") }
     assert_match(/does not have ID field "id"/, error.message)
   end
 
   def test_custom_id_field
-    ms = Minisearch.new(fields: ["title"], id_field: "key")
+    ms = MiniFTS.new(fields: ["title"], id_field: "key")
     ms.add("key" => "abc", "title" => "hello world")
     assert ms.has?("abc")
     assert_equal "abc", ms.search("hello").first[:id]
@@ -64,14 +64,14 @@ class TestMinisearch < Minitest::Test
 
   def test_remove_absent_document_raises
     ms = sample
-    error = assert_raises(Minisearch::Error) do
+    error = assert_raises(MiniFTS::Error) do
       ms.remove("id" => 99, "title" => "ghost", "text" => "boo")
     end
     assert_match(/cannot remove document with ID 99/, error.message)
   end
 
   def test_discard_absent_raises
-    error = assert_raises(Minisearch::Error) { sample.discard(99) }
+    error = assert_raises(MiniFTS::Error) { sample.discard(99) }
     assert_match(/cannot discard document with ID 99/, error.message)
   end
 
@@ -90,28 +90,28 @@ class TestMinisearch < Minitest::Test
   end
 
   def test_invalid_combinator_raises
-    error = assert_raises(Minisearch::Error) { sample.search("moby dick", combine_with: "NAND") }
+    error = assert_raises(MiniFTS::Error) { sample.search("moby dick", combine_with: "NAND") }
     assert_match(/Invalid combination operator: NAND/, error.message)
   end
 
   def test_wildcard_matches_all
-    assert_equal([1, 2], sample.search(Minisearch::WILDCARD).map { |r| r[:id] })
-    assert_equal Minisearch::WILDCARD, Minisearch.wildcard
+    assert_equal([1, 2], sample.search(MiniFTS::WILDCARD).map { |r| r[:id] })
+    assert_equal MiniFTS::WILDCARD, MiniFTS.wildcard
   end
 
   def test_empty_index_search_is_empty
-    assert_empty Minisearch.new(fields: ["title"]).search("anything")
+    assert_empty MiniFTS.new(fields: ["title"]).search("anything")
   end
 
   def test_get_default_and_unknown_option
-    assert_equal "id", Minisearch.get_default("id_field")
-    assert_equal "id", Minisearch.get_default(:id_field)
-    error = assert_raises(Minisearch::Error) { Minisearch.get_default("nope") }
+    assert_equal "id", MiniFTS.get_default("id_field")
+    assert_equal "id", MiniFTS.get_default(:id_field)
+    error = assert_raises(MiniFTS::Error) { MiniFTS.get_default("nope") }
     assert_match(/unknown option "nope"/, error.message)
   end
 
   def test_symbol_keyed_documents_via_custom_extract_field
-    ms = Minisearch.new(
+    ms = MiniFTS.new(
       fields: ["title"],
       extract_field: ->(doc, field) { doc[field.to_sym] }
     )
@@ -122,26 +122,26 @@ class TestMinisearch < Minitest::Test
   def test_serialization_round_trip
     ms = sample
     json = ms.to_json
-    loaded = Minisearch.load_json(json, fields: %w[title text], store_fields: %w[title category])
+    loaded = MiniFTS.load_json(json, fields: %w[title text], store_fields: %w[title category])
     assert_equal(ms.search("port").map { |r| r[:id] }, loaded.search("port").map { |r| r[:id] })
     assert_equal ms.document_count, loaded.document_count
     assert_equal "Moby Dick", loaded.get_stored_fields(1)["title"]
   end
 
   def test_load_json_requires_options
-    assert_raises(Minisearch::Error) { Minisearch.load_json("{}", nil) }
+    assert_raises(MiniFTS::Error) { MiniFTS.load_json("{}", nil) }
   end
 
   def test_load_rejects_incompatible_version
-    error = assert_raises(Minisearch::Error) do
-      Minisearch.load({ "serializationVersion" => 99 }, fields: ["title"])
+    error = assert_raises(MiniFTS::Error) do
+      MiniFTS.load({ "serializationVersion" => 99 }, fields: ["title"])
     end
     assert_match(/incompatible version/, error.message)
   end
 
   def test_process_term_can_reject_terms
     stop_words = %w[the a of]
-    ms = Minisearch.new(
+    ms = MiniFTS.new(
       fields: ["text"],
       process_term: lambda { |t, _f = nil|
         d = t.downcase
@@ -156,7 +156,7 @@ end
 
 # The radix tree is exported for standalone use.
 class TestSearchableMap < Minitest::Test
-  Map = Minisearch::SearchableMap
+  Map = MiniFTS::SearchableMap
 
   def test_set_get_has_delete
     m = Map.new
@@ -208,6 +208,6 @@ class TestSearchableMap < Minitest::Test
   end
 
   def test_non_string_key_raises
-    assert_raises(Minisearch::Error) { Map.new.set(42, "x") }
+    assert_raises(MiniFTS::Error) { Map.new.set(42, "x") }
   end
 end

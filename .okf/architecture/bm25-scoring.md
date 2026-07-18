@@ -39,5 +39,5 @@ the last bits of the result.
 
 # Citations
 
-[1] `lib/minisearch.rb` — `calc_bm25_score`, `DEFAULT_BM25_PARAMS = { k: 1.2, b: 0.7, d: 0.5 }`.
+[1] `lib/minifts.rb` — `calc_bm25_score`, `DEFAULT_BM25_PARAMS = { k: 1.2, b: 0.7, d: 0.5 }`.
 [2] BM25+ lower bound: Lv & Zhai, "Lower-Bounding Term Frequency Normalization to Predict Length Normalization Parameters" (CIKM 2011).

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Search shootout: okf's built-in search vs a minisearch-backed inverted index,
+# Search shootout: okf's built-in search vs a minifts-backed inverted index,
 # over REAL data.
 #
 # The current okf search (OKF::Bundle::Search) is a linear substring scan: every
@@ -13,21 +13,21 @@
 # those real concepts with unique ids/titles but their real bodies, so you watch
 # the linear scan degrade with N while the pre-built index stays roughly flat.
 #
-# Run it WITHOUT bundler, so the installed okf gem resolves (minisearch's own
+# Run it WITHOUT bundler, so the installed okf gem resolves (minifts's own
 # Gemfile does not depend on okf):
 #
 #   gem install benchmark-ips
-#   ruby -Ilib benchmarks/okf_vs_minisearch.rb                 # default sizes
-#   ruby -Ilib benchmarks/okf_vs_minisearch.rb 23 500 2000 8000
+#   ruby -Ilib benchmarks/okf_vs_minifts.rb                 # default sizes
+#   ruby -Ilib benchmarks/okf_vs_minifts.rb 23 500 2000 8000
 #
 # Note the semantic differences the numbers sit on top of: okf ANDs case-
-# insensitive *substrings* across fields and ranks by which fields hit; minisearch
+# insensitive *substrings* across fields and ranks by which fields hit; minifts
 # matches *tokens* (AND here) and ranks by BM25+. Both answer "which concepts
 # carry all these terms?" — the workload is comparable, the internals are not.
 
 require "set"
 
-require "minisearch"
+require "minifts"
 
 # benchmark-ips — the requested measurement harness.
 begin
@@ -78,7 +78,7 @@ puts "Corpus:   @#{chosen[:slug]} — #{BASE.size} real concepts (#{chosen[:dir]
 FIELDS = OKF::Bundle::Search::FIELDS
 WEIGHTS = OKF::Bundle::Search::WEIGHTS
 
-# One concept → the minisearch document (string keys, id-keyed).
+# One concept → the minifts document (string keys, id-keyed).
 def doc_from(concept)
   {
     "id" => concept.id,
@@ -149,7 +149,7 @@ puts "Queries:  #{QUERIES.map { |q| q.join(' ') }.inspect}"
 # ── 4. Adapters over the two engines ─────────────────────────────────────────
 
 def build_index(docs)
-  index = Minisearch.new(fields: FIELDS, id_field: "id", store_fields: ["title"])
+  index = MiniFTS.new(fields: FIELDS, id_field: "id", store_fields: ["title"])
   index.add_all(docs)
   index
 end
@@ -158,7 +158,7 @@ def okf_search(bundle, query)
   OKF::Bundle::Search.call(bundle, query)
 end
 
-def minisearch_search(index, query)
+def minifts_search(index, query)
   index.search(query.join(" "), combine_with: "AND", boost: WEIGHTS)
 end
 
@@ -166,7 +166,7 @@ end
 
 def parity(bundle, index)
   QUERIES.first(3).map do |query|
-    "#{query.join(' ')}=>okf:#{okf_search(bundle, query).size}/ms:#{minisearch_search(index, query).size}"
+    "#{query.join(' ')}=>okf:#{okf_search(bundle, query).size}/ms:#{minifts_search(index, query).size}"
   end.join("  ")
 end
 
@@ -188,15 +188,15 @@ SIZES.each do |n|
   Benchmark.ips do |x|
     x.config(time: 3, warmup: 1)
     x.report("okf scan")   { QUERIES.each { |query| okf_search(bundle, query) } }
-    x.report("minisearch") { QUERIES.each { |query| minisearch_search(index, query) } }
+    x.report("minifts") { QUERIES.each { |query| minifts_search(index, query) } }
     x.compare!
   end
 end
 
-# ── 7. Index build cost — what minisearch pays once, okf never pays ──────────
+# ── 7. Index build cost — what minifts pays once, okf never pays ──────────
 
 puts "\n#{'=' * 72}"
-puts "index build cost — minisearch pays this once up front; okf builds nothing"
+puts "index build cost — minifts pays this once up front; okf builds nothing"
 puts "=" * 72
 
 Benchmark.ips do |x|

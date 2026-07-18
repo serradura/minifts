@@ -48,7 +48,7 @@ which is idiomatic on purpose:
 - field names are strings, read with `doc[field]` by default;
 - vacuuming is **synchronous** (Ruby has no UI main thread to protect), so the
   async / batched variants are omitted;
-- the match-everything query is `Minisearch::WILDCARD`.
+- the match-everything query is `MiniFTS::WILDCARD`.
 
 # Citations
 

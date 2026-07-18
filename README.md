@@ -1,4 +1,12 @@
-# Minisearch
+# MiniFTS
+
+<p align="center">
+  <a href="https://rubygems.org/gems/minifts"><img src="https://img.shields.io/gem/v/minifts" alt="Gem version"></a>
+  <a href="https://rubygems.org/gems/minifts"><img src="https://img.shields.io/gem/dt/minifts" alt="Downloads"></a>
+  <a href="https://github.com/serradura/minifts/actions/workflows/main.yml"><img src="https://github.com/serradura/minifts/actions/workflows/main.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/serradura/minifts"><img src="https://img.shields.io/badge/ruby-%3E%3D%202.4-black" alt="Ruby >= 2.4"></a>
+  <a href="LICENSE.txt"><img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT"></a>
+</p>
 
 A tiny, dependency-free **full-text search engine** for Ruby, held entirely in
 memory. It is a faithful Ruby port of the excellent JavaScript
@@ -20,19 +28,19 @@ auto-suggestions, and JSON index format.
 ## Installation
 
 ```bash
-gem install minisearch
+gem install minifts
 ```
 
 Or in a `Gemfile`:
 
 ```ruby
-gem "minisearch"
+gem "minifts"
 ```
 
 ## Quick start
 
 ```ruby
-require "minisearch"
+require "minifts"
 
 documents = [
   { "id" => 1, "title" => "Moby Dick",   "text" => "Call me Ishmael. Some years ago...", "category" => "fiction" },
@@ -40,7 +48,7 @@ documents = [
   { "id" => 3, "title" => "Neuromancer", "text" => "The sky above the port was...", "category" => "sci-fi" },
 ]
 
-ms = Minisearch.new(fields: %w[title text], store_fields: %w[title category])
+ms = MiniFTS.new(fields: %w[title text], store_fields: %w[title category])
 ms.add_all(documents)
 
 ms.search("zen motorcycle")
@@ -70,7 +78,7 @@ ms.search("art", boost_document: ->(id, term, stored) { stored["featured"] ? 2 :
 ms.search("zen art", boost_term: ->(term, i, terms) { term == "zen" ? 2 : 1 })  # weight some query terms higher
 ms.search("moto", prefix: true, weights: { prefix: 0.1 })   # down-weight non-exact (prefix/fuzzy) matches
 ms.search("zen", bm25: { k: 1.2, b: 0.7, d: 0.5 })          # tune BM25+ scoring (defaults shown)
-ms.search(Minisearch::WILDCARD)                          # match every document
+ms.search(MiniFTS::WILDCARD)                          # match every document
 ```
 
 Query strings can also be combination trees:
@@ -127,7 +135,7 @@ Introspection: `document_count`, `term_count`, `has?(id)`,
 ## Configuration
 
 ```ruby
-Minisearch.new(
+MiniFTS.new(
   fields: %w[title text],       # REQUIRED: field names (strings) to index
   id_field: "id",               # unique-ID field (default "id")
   store_fields: %w[title],      # fields to keep and return in results
@@ -143,7 +151,7 @@ Minisearch.new(
 ```
 
 Callables are anything responding to `call` (lambdas, procs, method objects).
-`Minisearch.get_default(:tokenize)` returns the built-in default for any
+`MiniFTS.get_default(:tokenize)` returns the built-in default for any
 constructor option (`:tokenize`, `:process_term`, `:extract_field`, ...), handy
 when you want to wrap the default rather than replace it.
 
@@ -153,7 +161,7 @@ By default documents are Hashes with **string** keys matching the field names.
 For symbol-keyed documents, supply an extractor:
 
 ```ruby
-Minisearch.new(fields: ["title"], extract_field: ->(doc, field) { doc[field.to_sym] })
+MiniFTS.new(fields: ["title"], extract_field: ->(doc, field) { doc[field.to_sym] })
 ```
 
 ### Stemming, stop words, synonyms
@@ -163,7 +171,7 @@ expand one):
 
 ```ruby
 STOP = %w[the a an of and].to_set
-Minisearch.new(
+MiniFTS.new(
   fields: ["text"],
   process_term: ->(t, _f = nil) { d = t.downcase; STOP.include?(d) ? nil : d }
 )
@@ -178,11 +186,11 @@ json = ms.to_json
 File.write("index.json", json)
 
 # Later — pass the same options used to build it:
-ms = Minisearch.load_json(File.read("index.json"), fields: %w[title text], store_fields: %w[title])
+ms = MiniFTS.load_json(File.read("index.json"), fields: %w[title text], store_fields: %w[title])
 ```
 
 If you already hold the index as a Ruby Hash (string keys) rather than a JSON
-string, use `ms.as_plain_object` to get one and `Minisearch.load(hash, **opts)`
+string, use `ms.as_plain_object` to get one and `MiniFTS.load(hash, **opts)`
 to load it back — `to_json`/`load_json` are exactly those two with JSON in
 between.
 
@@ -192,12 +200,12 @@ client-side.
 
 ## The radix tree
 
-The inverted index is backed by `Minisearch::SearchableMap`, a radix tree with
+The inverted index is backed by `MiniFTS::SearchableMap`, a radix tree with
 `Map`-like semantics plus `at_prefix` and `fuzzy_get`. It is exported for
 standalone use:
 
 ```ruby
-map = Minisearch::SearchableMap.new
+map = MiniFTS::SearchableMap.new
 map.set("motorcycle", 1).set("motor", 2)
 map.at_prefix("moto").keys       # => ["motor", "motorcycle"]
 map.fuzzy_get("moter", 1)        # => { "motor" => [2, 1] }
@@ -268,7 +276,7 @@ The whole suite runs on **Ruby 2.4** (verified in a `ruby:2.4` container).
 - Vacuuming is **synchronous** (Ruby has no main thread to protect), so the
   async variants (`addAllAsync`, `loadJSONAsync`, batched `vacuum`) are omitted;
   `vacuum` cleans up immediately and `is_vacuuming` does not apply.
-- The wildcard is `Minisearch::WILDCARD` (or `Minisearch.wildcard`).
+- The wildcard is `MiniFTS::WILDCARD` (or `MiniFTS.wildcard`).
 
 ## Development
 

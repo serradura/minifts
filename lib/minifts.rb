@@ -2,8 +2,8 @@
 
 require "json"
 
-require_relative "minisearch/version"
-require_relative "minisearch/searchable_map"
+require_relative "minifts/version"
+require_relative "minifts/searchable_map"
 
 # A tiny, dependency-free full-text search engine, held entirely in memory.
 #
@@ -18,14 +18,14 @@ require_relative "minisearch/searchable_map"
 # strings.
 #
 # @example
-#   ms = Minisearch.new(fields: ["title", "text"], store_fields: ["title"])
+#   ms = MiniFTS.new(fields: ["title", "text"], store_fields: ["title"])
 #   ms.add_all([
 #     { "id" => 1, "title" => "Moby Dick",   "text" => "Call me Ishmael" },
 #     { "id" => 2, "title" => "Neuromancer", "text" => "The sky above the port" },
 #   ])
 #   ms.search("ishmael")       # => [{ id: 1, score: ..., ... }]
 #   ms.search("neuro", prefix: true)
-class Minisearch
+class MiniFTS
   # Raised for invalid usage (missing options, duplicate/absent IDs, bad
   # combinators, incompatible serialized indexes).
   class Error < StandardError; end
@@ -73,7 +73,7 @@ class Minisearch
 
   # Default logger: write warnings to $stderr.
   DEFAULT_LOGGER = lambda do |level, message, _code = nil|
-    warn("[minisearch] #{level}: #{message}")
+    warn("[minifts] #{level}: #{message}")
   end
 
   DEFAULT_OPTIONS = {
@@ -120,7 +120,7 @@ class Minisearch
   # @param options [Hash] configuration. +:fields+ (an Array of field-name
   #   strings to index) is required. See the README for the full list.
   def initialize(options = {})
-    raise Error, 'Minisearch: option "fields" must be provided' if options[:fields].nil?
+    raise Error, 'MiniFTS: option "fields" must be provided' if options[:fields].nil?
 
     auto_vacuum =
       if options[:auto_vacuum].nil? || options[:auto_vacuum] == true
@@ -146,8 +146,8 @@ class Minisearch
     process_term = @options[:process_term]
 
     id = extract_field.call(document, @options[:id_field])
-    raise Error, "Minisearch: document does not have ID field \"#{@options[:id_field]}\"" if id.nil?
-    raise Error, "Minisearch: duplicate ID #{id}" if @id_to_short_id.key?(id)
+    raise Error, "MiniFTS: document does not have ID field \"#{@options[:id_field]}\"" if id.nil?
+    raise Error, "MiniFTS: duplicate ID #{id}" if @id_to_short_id.key?(id)
 
     short_document_id = add_document_id(id)
     save_stored_fields(short_document_id, document)
@@ -191,10 +191,10 @@ class Minisearch
     stringify_field = @options[:stringify_field]
 
     id = extract_field.call(document, @options[:id_field])
-    raise Error, "Minisearch: document does not have ID field \"#{@options[:id_field]}\"" if id.nil?
+    raise Error, "MiniFTS: document does not have ID field \"#{@options[:id_field]}\"" if id.nil?
 
     short_id = @id_to_short_id[id]
-    raise Error, "Minisearch: cannot remove document with ID #{id}: it is not in the index" if short_id.nil?
+    raise Error, "MiniFTS: cannot remove document with ID #{id}: it is not in the index" if short_id.nil?
 
     @options[:fields].each do |field|
       field_value = extract_field.call(document, field)
@@ -242,7 +242,7 @@ class Minisearch
   # next search that encounters them, or by {#vacuum}). Only needs the ID.
   def discard(id)
     short_id = @id_to_short_id[id]
-    raise Error, "Minisearch: cannot discard document with ID #{id}: it is not in the index" if short_id.nil?
+    raise Error, "MiniFTS: cannot discard document with ID #{id}: it is not in the index" if short_id.nil?
 
     @id_to_short_id.delete(id)
     @document_ids.delete(short_id)
@@ -394,7 +394,7 @@ class Minisearch
   # Returns the default value of a constructor option, or raises for unknown names.
   def self.get_default(option_name)
     key = option_name.to_sym
-    raise Error, "Minisearch: unknown option \"#{option_name}\"" unless DEFAULT_OPTIONS.key?(key)
+    raise Error, "MiniFTS: unknown option \"#{option_name}\"" unless DEFAULT_OPTIONS.key?(key)
 
     DEFAULT_OPTIONS[key]
   end
@@ -440,7 +440,7 @@ class Minisearch
   # Deserializes a JSON index produced by {#to_json} (or by the JS library),
   # given the same options originally used.
   def self.load_json(json, options = {})
-    raise Error, "Minisearch: loadJSON should be given the same options used when serializing the index" if options.nil?
+    raise Error, "MiniFTS: loadJSON should be given the same options used when serializing the index" if options.nil?
 
     load(JSON.parse(json), options)
   end
@@ -450,7 +450,7 @@ class Minisearch
   def self.load(js, options)
     serialization_version = js["serializationVersion"]
     unless [1, 2].include?(serialization_version)
-      raise Error, "Minisearch: cannot deserialize an index created with an incompatible version"
+      raise Error, "MiniFTS: cannot deserialize an index created with an incompatible version"
     end
 
     ms = new(options)
@@ -611,7 +611,7 @@ class Minisearch
 
     logger.call(
       "warn",
-      "Minisearch: document with ID #{@document_ids[short_document_id]} has changed before " \
+      "MiniFTS: document with ID #{@document_ids[short_document_id]} has changed before " \
       "removal: term \"#{term}\" was not present in field \"#{field_name}\". Removing a " \
       "document after it has changed can corrupt the index!",
       "version_conflict"

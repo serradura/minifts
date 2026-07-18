@@ -39,7 +39,7 @@ class TestInterchange < Minitest::Test
       ruby_raw   = File.read(File.join(dir, "ruby.index.json"))
 
       # (INVARIANT: Ruby loads a JS-built index and searches identically.)
-      loaded = Minisearch.load_json(js_raw, internal[:options])
+      loaded = MiniFTS.load_json(js_raw, internal[:options])
       ruby_loads_js = Compat.run_queries(loaded, internal[:queries])
 
       assert_equal Compat.canon(js_results), Compat.canon(ruby_loads_js),

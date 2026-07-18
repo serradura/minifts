@@ -21,7 +21,7 @@ class TestLifecycle < Minitest::Test
   OPTS = { fields: %w[title text], store_fields: ["title"] }.freeze
 
   def build
-    ms = Minisearch.new(OPTS)
+    ms = MiniFTS.new(OPTS)
     ms.add_all(DOCS)
     ms
   end
@@ -102,7 +102,7 @@ class TestLifecycle < Minitest::Test
     assert_equal g_dirty["dirtCount"], parsed["dirtCount"]
     assert_equal g_dirty["documentCount"], parsed["documentCount"]
 
-    reloaded = Minisearch.load_json(ms.to_json, OPTS)
+    reloaded = MiniFTS.load_json(ms.to_json, OPTS)
     assert_equal(DATA["loaded_after_discard"], reloaded.search("beta gamma").map { |r| r[:id] })
   end
 
@@ -111,7 +111,7 @@ class TestLifecycle < Minitest::Test
     many = Array.new(60) do |i|
       { "id" => i + 1, "title" => "doc #{i}", "text" => "content word#{i % 5} common" }
     end
-    ms = Minisearch.new(fields: %w[title text])
+    ms = MiniFTS.new(fields: %w[title text])
     ms.add_all(many)
     assert_equal g["tcBefore"], ms.term_count
 

@@ -28,8 +28,8 @@ class TestLoad < Minitest::Test
   end
 
   def test_is_compatible_with_serialization_version_one
-    loaded = Minisearch.load_json(JSON_V1, OPTIONS)
-    built = Minisearch.new(OPTIONS)
+    loaded = MiniFTS.load_json(JSON_V1, OPTIONS)
+    built = MiniFTS.new(OPTIONS)
     built.add_all(DOCUMENTS)
 
     assert_equal built.document_count, loaded.document_count

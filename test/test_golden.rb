@@ -15,7 +15,7 @@ class TestGolden < Minitest::Test
   FLOAT_TOLERANCE = 1e-9
 
   def build
-    ms = Minisearch.new(fields: %w[title text], store_fields: %w[title category])
+    ms = MiniFTS.new(fields: %w[title text], store_fields: %w[title category])
     ms.add_all(DOCS)
     ms
   end
@@ -116,11 +116,11 @@ class TestGolden < Minitest::Test
   end
 
   def test_wildcard
-    assert_matches golden("wildcard"), build.search(Minisearch::WILDCARD)
+    assert_matches golden("wildcard"), build.search(MiniFTS::WILDCARD)
   end
 
   def test_wildcard_filtered
-    result = build.search(Minisearch::WILDCARD, filter: ->(r) { r["category"] == "non-fiction" })
+    result = build.search(MiniFTS::WILDCARD, filter: ->(r) { r["category"] == "non-fiction" })
     assert_matches golden("wildcard_filtered"), result
   end
 
@@ -215,7 +215,7 @@ class TestGolden < Minitest::Test
   # --- custom processing --------------------------------------------------
 
   def test_process_term_array
-    ms = Minisearch.new(
+    ms = MiniFTS.new(
       fields: ["title"],
       process_term: ->(t, _f = nil) { t.downcase == "lbs" ? %w[lbs lb pound] : t.downcase }
     )
@@ -226,7 +226,7 @@ class TestGolden < Minitest::Test
   # --- tokenizer edge cases ----------------------------------------------
 
   def tok_index
-    ms = Minisearch.new(fields: ["t"], store_fields: ["t"])
+    ms = MiniFTS.new(fields: ["t"], store_fields: ["t"])
     ms.add_all([
                  { "id" => 1, "t" => "  hello   world  " },
                  { "id" => 2, "t" => "café RÉSUMÉ naïve" },
@@ -282,7 +282,7 @@ class TestGolden < Minitest::Test
 
   def test_after_load
     ms = build
-    reloaded = Minisearch.load_json(ms.to_json, fields: %w[title text], store_fields: %w[title category])
+    reloaded = MiniFTS.load_json(ms.to_json, fields: %w[title text], store_fields: %w[title category])
     assert_matches golden("after_load"), reloaded.search("zen art motorcycle")
   end
 end

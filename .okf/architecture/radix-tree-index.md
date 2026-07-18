@@ -1,15 +1,15 @@
 ---
 type: Component
 title: Radix-tree Index
-description: Minisearch::SearchableMap, a compressed prefix tree with Map semantics plus prefix and fuzzy lookup, whose iteration order is byte-compatible with the JS SearchableMap.
-resource: lib/minisearch/searchable_map.rb
+description: MiniFTS::SearchableMap, a compressed prefix tree with Map semantics plus prefix and fuzzy lookup, whose iteration order is byte-compatible with the JS SearchableMap.
+resource: lib/minifts/searchable_map.rb
 tags: [performance, fidelity]
 timestamp: 2026-07-18
 ---
 
 # Overview
 
-`Minisearch::SearchableMap` is the inverted index's substrate: a radix tree
+`MiniFTS::SearchableMap` is the inverted index's substrate: a radix tree
 (compressed prefix trie) that behaves like a `Map` but also answers `at_prefix`
 and `fuzzy_get`. It is exported for standalone use (see the README).
 
@@ -51,4 +51,4 @@ See [allocation-tuning](/benchmarks/allocation-tuning.md).
 
 # Citations
 
-[1] `lib/minisearch/searchable_map.rb` — `LEAF`, `dfs` (`keys.reverse_each`), `fuzzy_search` / `fuzzy_recurse`.
+[1] `lib/minifts/searchable_map.rb` — `LEAF`, `dfs` (`keys.reverse_each`), `fuzzy_search` / `fuzzy_recurse`.

@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in minisearch.gemspec
+# Specify your gem's dependencies in minifts.gemspec
 gemspec
 
 gem "rake", "~> 13.0"
@@ -16,7 +16,7 @@ if RUBY_VERSION >= "2.7"
   gem "irb"
   gem "rubocop", "~> 1.21"
 
-  # benchmarks/ only (never run in CI). benchmarks/okf_vs_minisearch.rb also needs
+  # benchmarks/ only (never run in CI). benchmarks/okf_vs_minifts.rb also needs
   # the okf gem, which is intentionally not a dependency here — run that one with
   # plain `ruby -Ilib`, not `bundle exec`, so the installed okf resolves.
   gem "benchmark-ips", "~> 2.0"

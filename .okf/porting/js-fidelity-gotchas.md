@@ -61,6 +61,6 @@ port must handle deliberately.
 
 # Citations
 
-[1] `lib/minisearch.rb` — `DEFAULT_TOKENIZE`, `truthy?`, `sort_by_score`, `to_json` / `as_plain_object` (`whole_float_as_integer`, field-id sort).
-[2] `lib/minisearch/searchable_map.rb` — `fuzzy_recurse` nil-guards.
+[1] `lib/minifts.rb` — `DEFAULT_TOKENIZE`, `truthy?`, `sort_by_score`, `to_json` / `as_plain_object` (`whole_float_as_integer`, field-id sort).
+[2] `lib/minifts/searchable_map.rb` — `fuzzy_recurse` nil-guards.
 [3] Reference implementation: `tmp/minisearch/src/` (`MiniSearch.ts`, `SearchableMap/`).

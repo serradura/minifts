@@ -12,7 +12,7 @@
 
 - Initial release: a pure-Ruby port of the JavaScript
   [MiniSearch](https://github.com/lucaong/minisearch) full-text search engine.
-- In-memory inverted index backed by a radix tree (`Minisearch::SearchableMap`)
+- In-memory inverted index backed by a radix tree (`MiniFTS::SearchableMap`)
   with exact, prefix, and fuzzy (Levenshtein) lookup.
 - BM25+ relevance scoring with field boosting, term boosting, document boosting,
   and per-field weights.

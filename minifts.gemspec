@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "lib/minisearch/version"
+require_relative "lib/minifts/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "minisearch"
-  spec.version = Minisearch::VERSION
+  spec.name = "minifts"
+  spec.version = MiniFTS::VERSION
   spec.authors = ["Rodrigo Serradura"]
   spec.email = ["rodrigo.serradura@gmail.com"]
 
@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
                      "BM25+ scoring, prefix and fuzzy matching, query combinators, and " \
                      "auto-suggestions, over a radix-tree inverted index. No native " \
                      "extensions, no runtime dependencies, runs on every Ruby since 2.4."
-  spec.homepage = "https://github.com/serradura/minisearch"
+  spec.homepage = "https://github.com/serradura/minifts"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.4.0"
   spec.metadata["homepage_uri"] = spec.homepage

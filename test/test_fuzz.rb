@@ -14,7 +14,7 @@ class TestFuzz < Minitest::Test
 
   def self.index
     @index ||= begin
-      ms = Minisearch.new(fields: %w[title text], store_fields: %w[title category])
+      ms = MiniFTS.new(fields: %w[title text], store_fields: %w[title category])
       ms.add_all(DATA["docs"])
       ms
     end

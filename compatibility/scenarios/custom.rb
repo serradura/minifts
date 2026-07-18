@@ -9,7 +9,7 @@ require "set"
 #
 # Shape (Ruby-native, already using symbol options + real lambdas):
 #   { "name" =>, "description" =>,
-#     :options   => { ... Minisearch.new options ... },
+#     :options   => { ... MiniFTS.new options ... },
 #     :documents => [ { string-keyed doc }, ... ],
 #     :mutations => [ [:discard, id], [:vacuum], [:replace, doc] ],   # optional
 #     :queries   => [ [query_arg, search_opts_hash], ... ] }

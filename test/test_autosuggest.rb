@@ -17,7 +17,7 @@ class TestAutoSuggest < Minitest::Test
   ].freeze
 
   def build(options = {})
-    ms = Minisearch.new({ fields: %w[title text], store_fields: ["category"] }.merge(options))
+    ms = MiniFTS.new({ fields: %w[title text], store_fields: ["category"] }.merge(options))
     ms.add_all(DOCUMENTS)
     ms
   end

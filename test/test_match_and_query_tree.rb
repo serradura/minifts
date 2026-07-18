@@ -23,13 +23,13 @@ class TestMatchAndQueryTree < Minitest::Test
   ].freeze
 
   def match_index
-    ms = Minisearch.new(fields: %w[title text])
+    ms = MiniFTS.new(fields: %w[title text])
     ms.add_all(MATCH_DOCS)
     ms
   end
 
   def tree_index
-    ms = Minisearch.new(fields: %w[title text], store_fields: %w[lang category])
+    ms = MiniFTS.new(fields: %w[title text], store_fields: %w[lang category])
     ms.add_all(TREE_DOCS)
     ms
   end
@@ -85,7 +85,7 @@ class TestMatchAndQueryTree < Minitest::Test
       calls << string
       string.split(/\W+/)
     }
-    ms = Minisearch.new(fields: %w[text title], search_options: { tokenize: tokenize })
+    ms = MiniFTS.new(fields: %w[text title], search_options: { tokenize: tokenize })
     ms.search("some search query")
     assert_equal ["some search query"], calls
   end
@@ -96,14 +96,14 @@ class TestMatchAndQueryTree < Minitest::Test
       calls << term
       term.downcase
     }
-    ms = Minisearch.new(fields: %w[text title], search_options: { process_term: process })
+    ms = MiniFTS.new(fields: %w[text title], search_options: { process_term: process })
     ms.search("some search query")
     %w[some search query].each { |term| assert_includes calls, term }
   end
 
   def test_does_not_break_when_special_object_properties_are_used_as_a_term
     special = %w[constructor hasOwnProperty isPrototypeOf]
-    ms = Minisearch.new(fields: ["text"])
+    ms = MiniFTS.new(fields: ["text"])
     ms.add("id" => 1, "text" => special.join(" "))
     special.each do |word|
       results = ms.search(word)
@@ -115,7 +115,7 @@ class TestMatchAndQueryTree < Minitest::Test
   # --- query tree --------------------------------------------------------
 
   def test_allows_combining_wildcard_queries
-    results = tree_index.search(combine_with: "AND_NOT", queries: [Minisearch::WILDCARD, "vita"])
+    results = tree_index.search(combine_with: "AND_NOT", queries: [MiniFTS::WILDCARD, "vita"])
     assert_equal([2], results.map { |r| r[:id] })
   end
 
