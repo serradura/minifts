@@ -8,7 +8,7 @@
 # JavaScript produced natively (fixtures/<name>/js.results.json). It also
 # asserts the Ruby and JS serialized indexes carry the same data.
 #
-# Run:  ruby -Icompatibility/test compatibility/test/test_interchange.rb
+# Run:  ruby -Ifidelity/test fidelity/test/test_interchange.rb
 # (or via `rake compat`, which runs stages 1-3 in order).
 #
 # Requires stages 1 and 2 to have run first (the fixtures must exist).

@@ -85,7 +85,7 @@ search behavior:
 ## Layout
 
 ```
-compatibility/
+fidelity/
   scenarios/
     catalog.json     # 25 data-only scenarios (built-in functions) — shared by both runtimes
     custom.rb        # 7 scenarios needing custom functions (Ruby)

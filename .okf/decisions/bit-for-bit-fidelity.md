@@ -54,4 +54,4 @@ which is idiomatic on purpose:
 
 [1] `README.md` §Fidelity and §"Differences from the JavaScript library".
 [2] `test/test_fuzz.rb` — `FLOAT_TOLERANCE = 1e-9`.
-[3] `compatibility/` (`rake compat`) — the bidirectional interchange proof.
+[3] `fidelity/` (`rake compat`) — the bidirectional interchange proof.

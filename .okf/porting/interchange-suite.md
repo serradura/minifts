@@ -1,8 +1,8 @@
 ---
 type: Reference
 title: Ruby ⇄ JavaScript Interchange Suite
-description: The bidirectional compatibility suite that proves a serialized index built by one runtime loads and searches identically in the other, and the byte-identity boundary it maps.
-resource: compatibility/
+description: The bidirectional fidelity suite that proves a serialized index built by one runtime loads and searches identically in the other, and the byte-identity boundary it maps.
+resource: fidelity/
 tags: [js-port, fidelity, testing]
 timestamp: 2026-07-18
 ---
@@ -58,7 +58,7 @@ fully equivalent.
 
 # Citations
 
-[1] `compatibility/` — `scenarios/` (catalog + custom twins), `bin/build_ruby.rb`,
+[1] `fidelity/` — `scenarios/` (catalog + custom twins), `bin/build_ruby.rb`,
     `bin/check_js.mjs`, `test/test_interchange.rb`; run with `rake compat`.
 [2] `lib/minifts.rb` — `to_json` (whole-float and field-id-order normalization).
-[3] `compatibility/README.md` — the invariants, boundaries, and scenario catalogue.
+[3] `fidelity/README.md` — the invariants, boundaries, and scenario catalogue.

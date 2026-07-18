@@ -267,7 +267,7 @@ hand-written expectations:
   e.g. most emoji), whose radix-tree terms sort by UTF-8 code point here vs
   UTF-16 code unit in JS; such indexes still load and search identically, only
   their serialized byte order differs. Interchange is verified in both directions
-  across 32 scenarios by `rake compat` (see `compatibility/`).
+  across 32 scenarios by `rake compat` (see `fidelity/`).
 
 The whole suite runs on **Ruby 2.4** (verified in a `ruby:2.4` container).
 
