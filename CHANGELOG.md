@@ -1,3 +1,8 @@
+## [1.0.1] - 2026-07-18
+
+- Require MFA for gem pushes (`rubygems_mfa_required` gemspec metadata). No
+  library changes; the packaged files and public API are identical to 1.0.0.
+
 ## [1.0.0] - 2026-07-18
 
 - Initial release: a pure-Ruby port of the JavaScript
