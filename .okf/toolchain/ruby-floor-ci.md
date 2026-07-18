@@ -50,11 +50,15 @@ pins one Ruby (3.4), not the matrix — the same tooling-versus-library split as
 above: the floor binds the *gem*, never the jobs that only read the repo. `okf
 validate` is a hard gate there (OKF §9 conformance is binary, and a bundle that
 fails it must not publish); `okf lint` runs `continue-on-error` because curation
-findings are advisory. Publishing needs Pages set to the "GitHub Actions" source
-once, in repository settings.
+findings are advisory.
+
+The site is live at <https://serradura.github.io/minifts/>. Standing it up took
+one repository setting — Pages source set to "GitHub Actions" — which is the
+piece a workflow file cannot carry: cloning this repo reproduces the workflow but
+not the setting, so a fork publishes nothing until someone flips it.
 
 # Citations
 
 [1] `Gemfile`, `Rakefile`, `.gitignore` (lockfile rationale), `.github/workflows/main.yml`.
 [2] Full matrix green (Ruby 2.4 → 4.0) on GitHub Actions, 2026-07-17.
-[3] `.github/workflows/okf.yml` — the bundle-publishing workflow (push-to-main on `.okf/**`, plus `workflow_dispatch`).
+[3] `.github/workflows/okf.yml` — the bundle-publishing workflow (push-to-main on `.okf/**`, plus `workflow_dispatch`); first run green in 23 s on 2026-07-18, publishing all 13 concepts.

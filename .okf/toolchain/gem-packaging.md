@@ -16,7 +16,8 @@ documents. Keeping those two apart is the gemspec's job, and it does it with a
 
 # What ships
 
-`gem build minifts.gemspec` at 1.0.0 packages exactly eight files:
+`gem build minifts.gemspec` packages exactly eight files — the same set from the
+published 1.0.0 through the 1.0.1 build:
 
 ```
 CHANGELOG.md  CODE_OF_CONDUCT.md  LICENSE.txt  README.md  Rakefile
@@ -51,10 +52,12 @@ and `bin/` are development tooling, and `.okf/`, `AGENTS.md`, `.claude/`,
 
 # The check
 
-When you add a top-level file, build and look:
+When you add a top-level file, build and look inside the package — no install
+needed, and it works on any version:
 
 ```bash
-gem build minifts.gemspec && gem contents minifts --version 1.0.0
+gem build minifts.gemspec
+tar -xOf minifts-*.gem data.tar.gz | tar -tzf -
 ```
 
 If the new file appears and should not, add its prefix to the reject list. This
@@ -62,8 +65,25 @@ is the same separation the [Ruby-floor CI](/toolchain/ruby-floor-ci.md) setup
 relies on: development tooling may assume a modern Ruby precisely because none of
 it is shipped to the user.
 
+# Publishing: MFA is required, from 1.0.1 onward
+
+The gemspec also sets `spec.metadata["rubygems_mfa_required"] = "true"`, so
+pushing a version requires multi-factor authentication regardless of the
+account-level setting — the requirement travels with the gem rather than with
+whoever owns it, which is what makes it survive a change of owner.
+
+The non-obvious part is *when* it applies. Gem metadata is **per-version and
+immutable once published**: enabling the flag protects no version already on
+RubyGems, only those published afterwards. 1.0.0 shipped before the flag and is
+permanently without it; 1.0.1 is the first version to carry it. Nothing can
+retrofit the earlier release, so the coverage gap is closed by publishing
+forward, never by editing.
+
 # Citations
 
-[1] `minifts.gemspec` — `spec.files`, the `reject` block.
-[2] `gem build minifts.gemspec` on 1.0.0 (2026-07-18) — the eight-file listing above.
-[3] Commit `e16d06a` — added `AGENTS.md` and `.claude/` to the reject list.
+[1] `minifts.gemspec` — `spec.files`, the `reject` block, and
+    `rubygems_mfa_required`.
+[2] `gem build minifts.gemspec` — the eight-file listing above, verified on the
+    published 1.0.0 (unpacked from RubyGems) and on the 1.0.1 build (2026-07-18).
+[3] Commit `e16d06a` — added `AGENTS.md` and `.claude/` to the reject list;
+    commit `311ce52` — enabled the MFA requirement.
