@@ -7,7 +7,9 @@
 /spec/reports/
 /tmp/
 
-/.claude/
+# Local agent config is per-machine, except the CLAUDE.md pointer at AGENTS.md.
+/.claude/*
+!/.claude/CLAUDE.md
 
 # A conditional Gemfile (tooling gated on Ruby version) has no single
 # lockfile valid across the 2.4-4.0 matrix; resolve per-Ruby instead.

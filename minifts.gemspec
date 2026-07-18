@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
     ls.readlines("\x0", chomp: true).reject do |f|
       (f == gemspec) ||
         f.start_with?(*%w[bin/ benchmarks/ fidelity/ .okf/ Gemfile .gitignore
-                          test/ .github/ .rubocop.yml])
+                          test/ .github/ .rubocop.yml AGENTS.md .claude/])
     end
   end
   spec.bindir = "exe"
